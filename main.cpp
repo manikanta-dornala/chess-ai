@@ -4,11 +4,10 @@
 using namespace std;
 int main()
 {
-    Square board[8][8];
+    Square         board[8][8];
     CastlingRights castlingRights;
     initializeBoard(board);
-    cout
-        << "hi\n";
+    cout << "hi\n";
     printBoard(board);
     cout << GetLegalMoves(board, white, castlingRights).size() << "\n";
     return 0;

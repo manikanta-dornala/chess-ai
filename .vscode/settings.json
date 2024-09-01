@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.html": "html",
+        "*.tsx": "typescriptreact",
+        "*.yaml": "yaml",
+        "map": "cpp",
+        "array": "cpp",
+        "vector": "cpp"
+    }
+}

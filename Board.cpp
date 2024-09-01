@@ -49,7 +49,7 @@ void copyBoard(const Square original[8][8], Square newBoard[8][8])
     {
         for (int j = 0; j < 8; j++)
         {
-            Square curr = original[i][j];
+            Square curr    = original[i][j];
             newBoard[i][j] = {curr.piece, curr.color};
         }
     }

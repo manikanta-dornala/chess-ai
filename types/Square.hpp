@@ -5,5 +5,5 @@
 struct Square
 {
     PieceType piece;
-    Color color;
+    Color     color;
 };
