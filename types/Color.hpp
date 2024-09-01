@@ -1,7 +1,7 @@
 #pragma once
 enum Color
 {
-    no_color = 0,
-    white,
-    black
+    Empty_Color = 0,
+    White,
+    Black
 };

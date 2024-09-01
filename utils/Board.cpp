@@ -1,5 +1,5 @@
 #pragma once
-#include "types/Square.hpp"
+#include "../types/Square.hpp"
 #include <iostream>
 #include <string>
 
@@ -13,34 +13,34 @@ void initializeBoard(Square board[8][8])
     {
         for (int col = 0; col < 8; ++col)
         {
-            board[row][col].piece = no_piece;
-            board[row][col].color = no_color;
+            board[row][col].piece = PieceType::Empty_Piece;
+            board[row][col].color = Color::Empty_Color;
         }
     }
 
     for (int col = 0; col < 8; ++col)
     {
-        board[1][col] = {pawn, white};
-        board[6][col] = {pawn, black};
+        board[1][col] = {PieceType::Pawn, Color::White};
+        board[6][col] = {PieceType::Pawn, Color::Black};
     }
 
-    board[0][0] = {rook, white};
-    board[0][7] = {rook, white};
-    board[0][1] = {knight, white};
-    board[0][6] = {knight, white};
-    board[0][2] = {bishop, white};
-    board[0][5] = {bishop, white};
-    board[0][3] = {queen, white};
-    board[0][4] = {king, white};
+    board[0][0] = {PieceType::Rook, Color::White};
+    board[0][7] = {PieceType::Rook, Color::White};
+    board[0][1] = {PieceType::Knight, Color::White};
+    board[0][6] = {PieceType::Knight, Color::White};
+    board[0][2] = {PieceType::Bishop, Color::White};
+    board[0][5] = {PieceType::Bishop, Color::White};
+    board[0][3] = {PieceType::Queen, Color::White};
+    board[0][4] = {PieceType::King, Color::White};
 
-    board[7][0] = {rook, black};
-    board[7][7] = {rook, black};
-    board[7][1] = {knight, black};
-    board[7][6] = {knight, black};
-    board[7][2] = {bishop, black};
-    board[7][5] = {bishop, black};
-    board[7][3] = {queen, black};
-    board[7][4] = {king, black};
+    board[7][0] = {PieceType::Rook, Color::Black};
+    board[7][7] = {PieceType::Rook, Color::Black};
+    board[7][1] = {PieceType::Knight, Color::Black};
+    board[7][6] = {PieceType::Knight, Color::Black};
+    board[7][2] = {PieceType::Bishop, Color::Black};
+    board[7][5] = {PieceType::Bishop, Color::Black};
+    board[7][3] = {PieceType::Queen, Color::Black};
+    board[7][4] = {PieceType::King, Color::Black};
 }
 
 void copyBoard(const Square original[8][8], Square newBoard[8][8])
@@ -62,7 +62,7 @@ int numPiecesOnBoard(const Square board[8][8])
     {
         for (int j = 0; j < 8; j++)
         {
-            if (board[i][j].piece != no_piece)
+            if (board[i][j].piece != PieceType::Empty_Piece)
             {
                 numPieces++;
             }
@@ -80,22 +80,22 @@ void printBoard(const Square board[8][8])
             char pieceChar = ' ';
             switch (board[row][col].piece)
             {
-            case pawn:
+            case PieceType::Pawn:
                 pieceChar = 'P';
                 break;
-            case knight:
+            case PieceType::Knight:
                 pieceChar = 'N';
                 break;
-            case bishop:
+            case PieceType::Bishop:
                 pieceChar = 'B';
                 break;
-            case rook:
+            case PieceType::Rook:
                 pieceChar = 'R';
                 break;
-            case queen:
+            case PieceType::Queen:
                 pieceChar = 'Q';
                 break;
-            case king:
+            case PieceType::King:
                 pieceChar = 'K';
                 break;
             default:
@@ -103,7 +103,7 @@ void printBoard(const Square board[8][8])
                 break;
             }
 
-            if (board[row][col].color == black)
+            if (board[row][col].color == Color::Black)
             {
                 pieceChar = tolower(pieceChar);
             }

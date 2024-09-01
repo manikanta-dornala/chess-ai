@@ -8,44 +8,38 @@ using namespace std;
 
 enum MoveType
 {
-  no_move = 0,
-  move,
-  double_move,
-  capture,
-  enpassant,
-  promote,
-  castling
+    no_move = 0,
+    move,
+    double_move,
+    capture,
+    enpassant,
+    promote,
+    castling
 };
 
 struct Move
 {
-  int currFile;
-  int currRank;
-  int targetFile;
-  int targetRank;
-  MoveType type;
+    SquarePosition curr;
+    SquarePosition target;
+    int            targetRank;
+    MoveType       type;
 };
 
-struct MoveSet
-{
-  int file;
-  int rank;
-};
 
 // Define vectors of MoveSet for each piece type
-const vector<MoveSet> rookMoves = {
+const vector<SquarePosition> rookMoves = {
     {0,  1 },
     {0,  -1},
     {1,  0 },
     {-1, 0 }
 };
-const vector<MoveSet> bishopMoves = {
+const vector<SquarePosition> bishopMoves = {
     {1,  1 },
     {1,  -1},
     {-1, 1 },
     {-1, -1}
 };
-const vector<MoveSet> queenMoves = {
+const vector<SquarePosition> queenMoves = {
     {1,  1 },
     {1,  -1},
     {-1, 1 },
@@ -55,7 +49,7 @@ const vector<MoveSet> queenMoves = {
     {1,  0 },
     {-1, 0 }
 };
-const vector<MoveSet> kingMoves = {
+const vector<SquarePosition> kingMoves = {
     {1,  1 },
     {1,  -1},
     {-1, 1 },
@@ -65,7 +59,7 @@ const vector<MoveSet> kingMoves = {
     {1,  0 },
     {-1, 0 }
 };
-const vector<MoveSet> knightMoves = {
+const vector<SquarePosition> knightMoves = {
     {2,  1 },
     {2,  -1},
     {-2, 1 },
@@ -77,395 +71,10 @@ const vector<MoveSet> knightMoves = {
 };
 
 // Initialize the map using vectors
-const map<PieceType, vector<MoveSet>> PieceMoveSets = {
-    {PieceType::rook,   rookMoves  },
-    {PieceType::bishop, bishopMoves},
-    {PieceType::queen,  queenMoves },
-    {PieceType::king,   kingMoves  },
-    {PieceType::knight, knightMoves}
-};
-    {-1, -1},
-    {0,  1 },
-    {0,  -1},
-    {1,  0 },
-    {-1, 0 }
-};
-const vector<MoveSet> kingMoves = {
-    {1,  1 },
-    {1,  -1},
-    {-1, 1 },
-    {-1, -1},
-    {0,  1 },
-    {0,  -1},
-    {1,  0 },
-    {-1, 0 }
-};
-const vector<MoveSet> knightMoves = {
-    {2,  1 },
-    {2,  -1},
-    {-2, 1 },
-    {-2, -1},
-    {1,  2 },
-    {1,  -2},
-    {-1, 2 },
-    {-1, -2}
-};
-
-// Initialize the map using vectors
-const map<PieceType, vector<MoveSet>> PieceMoveSets = {
-    {PieceType::rook,   rookMoves  },
-    {PieceType::bishop, bishopMoves},
-    {PieceType::queen,  queenMoves },
-    {PieceType::king,   kingMoves  },
-    {PieceType::knight, knightMoves}
-};
-    {-1, -1},
-    {0,  1 },
-    {0,  -1},
-    {1,  0 },
-    {-1, 0 }
-};
-const vector<MoveSet> kingMoves = {
-    {1,  1 },
-    {1,  -1},
-    {-1, 1 },
-    {-1, -1},
-    {0,  1 },
-    {0,  -1},
-    {1,  0 },
-    {-1, 0 }
-};
-const vector<MoveSet> knightMoves = {
-    {2,  1 },
-    {2,  -1},
-    {-2, 1 },
-    {-2, -1},
-    {1,  2 },
-    {1,  -2},
-    {-1, 2 },
-    {-1, -2}
-};
-
-// Initialize the map using vectors
-const map<PieceType, vector<MoveSet>> PieceMoveSets = {
-    {PieceType::rook,   rookMoves  },
-    {PieceType::bishop, bishopMoves},
-    {PieceType::queen,  queenMoves },
-    {PieceType::king,   kingMoves  },
-    {PieceType::knight, knightMoves}
-};
-    {-1, -1},
-    {0,  1 },
-    {0,  -1},
-    {1,  0 },
-    {-1, 0 }
-};
-const vector<MoveSet> kingMoves = {
-    {1,  1 },
-    {1,  -1},
-    {-1, 1 },
-    {-1, -1},
-    {0,  1 },
-    {0,  -1},
-    {1,  0 },
-    {-1, 0 }
-};
-const vector<MoveSet> knightMoves = {
-    {2,  1 },
-    {2,  -1},
-    {-2, 1 },
-    {-2, -1},
-    {1,  2 },
-    {1,  -2},
-    {-1, 2 },
-    {-1, -2}
-};
-
-// Initialize the map using vectors
-const map<PieceType, vector<MoveSet>> PieceMoveSets = {
-    {PieceType::rook,   rookMoves  },
-    {PieceType::bishop, bishopMoves},
-    {PieceType::queen,  queenMoves },
-    {PieceType::king,   kingMoves  },
-    {PieceType::knight, knightMoves}
-};
-    {-1, -1},
-    {0,  1 },
-    {0,  -1},
-    {1,  0 },
-    {-1, 0 }
-};
-const vector<MoveSet> kingMoves = {
-    {1,  1 },
-    {1,  -1},
-    {-1, 1 },
-    {-1, -1},
-    {0,  1 },
-    {0,  -1},
-    {1,  0 },
-    {-1, 0 }
-};
-const vector<MoveSet> knightMoves = {
-    {2,  1 },
-    {2,  -1},
-    {-2, 1 },
-    {-2, -1},
-    {1,  2 },
-    {1,  -2},
-    {-1, 2 },
-    {-1, -2}
-};
-
-// Initialize the map using vectors
-const map<PieceType, vector<MoveSet>> PieceMoveSets = {
-    {PieceType::rook,   rookMoves  },
-    {PieceType::bishop, bishopMoves},
-    {PieceType::queen,  queenMoves },
-    {PieceType::king,   kingMoves  },
-    {PieceType::knight, knightMoves}
-};
-    {-1, -1},
-    {0,  1 },
-    {0,  -1},
-    {1,  0 },
-    {-1, 0 }
-};
-const vector<MoveSet> kingMoves = {
-    {1,  1 },
-    {1,  -1},
-    {-1, 1 },
-    {-1, -1},
-    {0,  1 },
-    {0,  -1},
-    {1,  0 },
-    {-1, 0 }
-};
-const vector<MoveSet> knightMoves = {
-    {2,  1 },
-    {2,  -1},
-    {-2, 1 },
-    {-2, -1},
-    {1,  2 },
-    {1,  -2},
-    {-1, 2 },
-    {-1, -2}
-};
-
-// Initialize the map using vectors
-const map<PieceType, vector<MoveSet>> PieceMoveSets = {
-    {PieceType::rook,   rookMoves  },
-    {PieceType::bishop, bishopMoves},
-    {PieceType::queen,  queenMoves },
-    {PieceType::king,   kingMoves  },
-    {PieceType::knight, knightMoves}
-};
-    {-1, -1},
-    {0,  1 },
-    {0,  -1},
-    {1,  0 },
-    {-1, 0 }
-};
-const vector<MoveSet> kingMoves = {
-    {1,  1 },
-    {1,  -1},
-    {-1, 1 },
-    {-1, -1},
-    {0,  1 },
-    {0,  -1},
-    {1,  0 },
-    {-1, 0 }
-};
-const vector<MoveSet> knightMoves = {
-    {2,  1 },
-    {2,  -1},
-    {-2, 1 },
-    {-2, -1},
-    {1,  2 },
-    {1,  -2},
-    {-1, 2 },
-    {-1, -2}
-};
-
-// Initialize the map using vectors
-const map<PieceType, vector<MoveSet>> PieceMoveSets = {
-    {PieceType::rook,   rookMoves  },
-    {PieceType::bishop, bishopMoves},
-    {PieceType::queen,  queenMoves },
-    {PieceType::king,   kingMoves  },
-    {PieceType::knight, knightMoves}
-};
-    {-1, -1},
-    {0,  1 },
-    {0,  -1},
-    {1,  0 },
-    {-1, 0 }
-};
-const vector<MoveSet> kingMoves = {
-    {1,  1 },
-    {1,  -1},
-    {-1, 1 },
-    {-1, -1},
-    {0,  1 },
-    {0,  -1},
-    {1,  0 },
-    {-1, 0 }
-};
-const vector<MoveSet> knightMoves = {
-    {2,  1 },
-    {2,  -1},
-    {-2, 1 },
-    {-2, -1},
-    {1,  2 },
-    {1,  -2},
-    {-1, 2 },
-    {-1, -2}
-};
-
-// Initialize the map using vectors
-const map<PieceType, vector<MoveSet>> PieceMoveSets = {
-    {PieceType::rook,   rookMoves  },
-    {PieceType::bishop, bishopMoves},
-    {PieceType::queen,  queenMoves },
-    {PieceType::king,   kingMoves  },
-    {PieceType::knight, knightMoves}
-};
-    {-1, -1},
-    {0,  1 },
-    {0,  -1},
-    {1,  0 },
-    {-1, 0 }
-};
-const vector<MoveSet> kingMoves = {
-    {1,  1 },
-    {1,  -1},
-    {-1, 1 },
-    {-1, -1},
-    {0,  1 },
-    {0,  -1},
-    {1,  0 },
-    {-1, 0 }
-};
-const vector<MoveSet> knightMoves = {
-    {2,  1 },
-    {2,  -1},
-    {-2, 1 },
-    {-2, -1},
-    {1,  2 },
-    {1,  -2},
-    {-1, 2 },
-    {-1, -2}
-};
-
-// Initialize the map using vectors
-const map<PieceType, vector<MoveSet>> PieceMoveSets = {
-    {PieceType::rook,   rookMoves  },
-    {PieceType::bishop, bishopMoves},
-    {PieceType::queen,  queenMoves },
-    {PieceType::king,   kingMoves  },
-    {PieceType::knight, knightMoves}
-};
-    {-1, -1},
-    {0,  1 },
-    {0,  -1},
-    {1,  0 },
-    {-1, 0 }
-};
-const vector<MoveSet> kingMoves = {
-    {1,  1 },
-    {1,  -1},
-    {-1, 1 },
-    {-1, -1},
-    {0,  1 },
-    {0,  -1},
-    {1,  0 },
-    {-1, 0 }
-};
-const vector<MoveSet> knightMoves = {
-    {2,  1 },
-    {2,  -1},
-    {-2, 1 },
-    {-2, -1},
-    {1,  2 },
-    {1,  -2},
-    {-1, 2 },
-    {-1, -2}
-};
-
-// Initialize the map using vectors
-const map<PieceType, vector<MoveSet>> PieceMoveSets = {
-    {PieceType::rook,   rookMoves  },
-    {PieceType::bishop, bishopMoves},
-    {PieceType::queen,  queenMoves },
-    {PieceType::king,   kingMoves  },
-    {PieceType::knight, knightMoves}
-};
-    {-1, -1},
-    {0,  1 },
-    {0,  -1},
-    {1,  0 },
-    {-1, 0 }
-};
-const vector<MoveSet> kingMoves = {
-    {1,  1 },
-    {1,  -1},
-    {-1, 1 },
-    {-1, -1},
-    {0,  1 },
-    {0,  -1},
-    {1,  0 },
-    {-1, 0 }
-};
-const vector<MoveSet> knightMoves = {
-    {2,  1 },
-    {2,  -1},
-    {-2, 1 },
-    {-2, -1},
-    {1,  2 },
-    {1,  -2},
-    {-1, 2 },
-    {-1, -2}
-};
-
-// Initialize the map using vectors
-const map<PieceType, vector<MoveSet>> PieceMoveSets = {
-    {PieceType::rook,   rookMoves  },
-    {PieceType::bishop, bishopMoves},
-    {PieceType::queen,  queenMoves },
-    {PieceType::king,   kingMoves  },
-    {PieceType::knight, knightMoves}
-};
-    {-1, -1},
-    {0,  1 },
-    {0,  -1},
-    {1,  0 },
-    {-1, 0 }
-};
-const vector<MoveSet> kingMoves = {
-    {1,  1 },
-    {1,  -1},
-    {-1, 1 },
-    {-1, -1},
-    {0,  1 },
-    {0,  -1},
-    {1,  0 },
-    {-1, 0 }
-};
-const vector<MoveSet> knightMoves = {
-    {2,  1 },
-    {2,  -1},
-    {-2, 1 },
-    {-2, -1},
-    {1,  2 },
-    {1,  -2},
-    {-1, 2 },
-    {-1, -2}
-};
-
-// Initialize the map using vectors
-const map<PieceType, vector<MoveSet>> PieceMoveSets = {
-    {PieceType::rook,   rookMoves  },
-    {PieceType::bishop, bishopMoves},
-    {PieceType::queen,  queenMoves },
-    {PieceType::king,   kingMoves  },
-    {PieceType::knight, knightMoves}
+const map<PieceType, vector<SquarePosition>> PieceMoveSets = {
+    {PieceType::Rook,   rookMoves  },
+    {PieceType::Bishop, bishopMoves},
+    {PieceType::Queen,  queenMoves },
+    {PieceType::King,   kingMoves  },
+    {PieceType::Knight, knightMoves}
 };

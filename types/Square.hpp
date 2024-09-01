@@ -7,3 +7,9 @@ struct Square
     PieceType piece;
     Color     color;
 };
+
+struct SquarePosition
+{
+    int file;
+    int rank;
+};

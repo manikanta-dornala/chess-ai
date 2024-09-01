@@ -1,11 +1,22 @@
 #pragma once
+#include <map>
+using namespace std;
 enum PieceType
 {
-    no_piece = 0, // empty
-    pawn,
-    knight,
-    bishop,
-    rook,
-    queen,
-    king
+    Empty_Piece = 0,
+    Pawn,
+    Knight,
+    Bishop,
+    Rook,
+    Queen,
+    King
+};
+
+const map<char, PieceType> PieceTypeMap = {
+    {'p', Pawn},
+    {'n', Knight},
+    {'b', Bishop},
+    {'r', Rook},
+    {'q', Queen},
+    {'k', King}
 };
