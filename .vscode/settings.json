@@ -1,8 +1,0 @@
-{
-    "files.associations": {
-        "*.html": "html",
-        "*.tsx": "typescriptreact",
-        "*.yaml": "yaml",
-        "string": "cpp"
-    }
-}

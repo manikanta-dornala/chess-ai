@@ -1,7 +1,7 @@
 #pragma once
+#include "../game/Board.cpp"
 #include "../types/CastlingRights.cpp"
 #include "../types/Square.cpp"
-#include "Board.cpp"
 #include <iostream>
 #include <string>
 using namespace std;

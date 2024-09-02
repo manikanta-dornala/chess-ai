@@ -1,4 +1,5 @@
 #pragma once
+#include "../utils/vector.cpp"
 #include "Piece.cpp"
 #include <list>
 #include <map>
@@ -37,26 +38,6 @@ const vector<SquarePosition> bishopMoves = {
     {-1, 1 },
     {-1, -1}
 };
-const vector<SquarePosition> queenMoves = {
-    {1,  1 },
-    {1,  -1},
-    {-1, 1 },
-    {-1, -1},
-    {0,  1 },
-    {0,  -1},
-    {1,  0 },
-    {-1, 0 }
-};
-const vector<SquarePosition> kingMoves = {
-    {1,  1 },
-    {1,  -1},
-    {-1, 1 },
-    {-1, -1},
-    {0,  1 },
-    {0,  -1},
-    {1,  0 },
-    {-1, 0 }
-};
 const vector<SquarePosition> knightMoves = {
     {2,  1 },
     {2,  -1},
@@ -67,12 +48,13 @@ const vector<SquarePosition> knightMoves = {
     {-1, 2 },
     {-1, -2}
 };
+const vector<SquarePosition> queenMoves = concatenate(rookMoves, bishopMoves);
 
 // Initialize the map using vectors
 const map<PieceType, vector<SquarePosition>> PieceMoveSets = {
     {PieceType::Rook,   rookMoves  },
     {PieceType::Bishop, bishopMoves},
     {PieceType::Queen,  queenMoves },
-    {PieceType::King,   kingMoves  },
+    {PieceType::King,   queenMoves },
     {PieceType::Knight, knightMoves}
 };

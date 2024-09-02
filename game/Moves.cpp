@@ -20,20 +20,21 @@ list<Move> GetPieceMoves(SquarePosition position, Square board[8][8])
     }
     const int moveLimit =
         pieceAtSquare.type == PieceType::King || pieceAtSquare.type == PieceType::Knight ? 1 : 8;
-    const auto& moveTarget = PieceMoveSets.at(pieceAtSquare.type);
-    for (const auto& moveDef : moveTarget)
+    const vector<SquarePosition> moveTarget = PieceMoveSets.at(pieceAtSquare.type);
+    for (const SquarePosition moveDef : moveTarget)
     {
         int i = 1;
         for (i = 1; i < moveLimit + 1; i++)
         {
-            int targetFile = position.file + (moveDef.file * i);
-            int targetRank = position.rank + (moveDef.rank * i);
-            if (targetFile < 0 || targetFile >= 8 || targetRank < 0 || targetRank >= 8)
-            {
+            const SquarePosition targetPosition = {
+                position.rank + (moveDef.rank * i), position.file + (moveDef.file * i)
+            };
+
+            if (!isPositionValid(targetPosition))
                 continue;
-            }
-            const Piece          pieceAtTarget  = board[targetRank][targetFile].piece;
-            const SquarePosition targetPosition = {targetRank, targetFile};
+
+            const Piece pieceAtTarget = board[targetPosition.rank][targetPosition.file].piece;
+
             if (pieceAtTarget.type == PieceType::Empty_Piece)
             {
                 // Empty Square
@@ -57,14 +58,59 @@ list<Move> GetPieceMoves(SquarePosition position, Square board[8][8])
 
 list<Move> GetPawnMovesForSquare(SquarePosition position, Square board[8][8])
 {
-    list<Move> moves;
+    list<Move>  moves           = {};
+    const Piece pieceAtPosition = board[position.rank][position.file].piece;
+    if (pieceAtPosition.type != Pawn)
+        return moves;
+
+    const int moveDir = pieceAtPosition.color == White ? 1 : -1;
+
+    // handle regular move on to a empty square
+    const SquarePosition forwardOne = {position.rank + moveDir, position.file};
+    if (isPositionValid(forwardOne) &&
+        board[forwardOne.rank][forwardOne.file].piece.type == PieceType::Empty_Piece)
+    {
+        moves.push_back({position, forwardOne, MoveType::move});
+
+        // since it can make one move, handle double move if at initial rank
+        const int initialRank = pieceAtPosition.color == White ? 1 : 6;
+        if (position.rank == initialRank)
+        {
+            const SquarePosition forwardTwo = {position.rank + 2 * moveDir, position.file};
+            if (isPositionValid(forwardTwo) &&
+                board[forwardTwo.rank][forwardTwo.file].piece.type == PieceType::Empty_Piece)
+            {
+                moves.push_back({position, forwardTwo, MoveType::move});
+            }
+        }
+    }
+
+    // handle capture
+    const SquarePosition capturePositions[2] = {
+        {position.rank + moveDir, position.file - 1},
+        {position.rank + moveDir, position.file + 1}
+    };
+    for (const SquarePosition capturePosition : capturePositions)
+    {
+        if (!isPositionValid(capturePosition))
+            continue;
+        const Piece pieceAtTarget = board[capturePosition.rank][capturePosition.file].piece;
+        if (pieceAtTarget.type != PieceType::Empty_Piece &&
+            pieceAtPosition.color != pieceAtTarget.color)
+        {
+            moves.push_back({position, capturePosition, MoveType::capture});
+        }
+    }
+
     return moves;
 }
 
 list<Move> GetMovesForSquare(SquarePosition position, Square board[8][8])
 {
-    list<Move> moves = GetPieceMoves(position, board);
-    return moves;
+    list<Move> pawnMoves  = GetPawnMovesForSquare(position, board);
+    list<Move> pieceMoves = GetPieceMoves(position, board);
+    pawnMoves.insert(pawnMoves.end(), pieceMoves.begin(), pieceMoves.end());
+    return pawnMoves;
 }
 
 list<Move> GetMoves(Square board[8][8], Color turn)

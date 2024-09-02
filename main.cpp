@@ -1,6 +1,6 @@
-#include "utils/Board.cpp"
+#include "game/Board.cpp"
+#include "game/Moves.cpp"
 #include "utils/BoardFromFEN.cpp"
-#include "utils/Moves.cpp"
 #include <iostream>
 #include <string>
 using namespace std;
