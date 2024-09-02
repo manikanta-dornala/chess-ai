@@ -1,0 +1,5 @@
+---
+triple:          'x86_64-apple-darwin'
+binary-path:     '/Users/sauron/code/github.com/chess-ai/main'
+relocations:     []
+...

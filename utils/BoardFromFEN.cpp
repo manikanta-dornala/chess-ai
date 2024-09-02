@@ -1,6 +1,6 @@
 #pragma once
-#include "../types/CastlingRights.hpp"
-#include "../types/Square.hpp"
+#include "../types/CastlingRights.cpp"
+#include "../types/Square.cpp"
 #include "Board.cpp"
 #include <iostream>
 #include <string>
@@ -13,8 +13,8 @@ void setBoardFromFEN(const string& fen, Square board[8][8])
     {
         for (int j = 0; j < 8; ++j)
         {
-            board[i][j].piece = PieceType::Empty_Piece;
-            board[i][j].color = Color::Empty_Color;
+            board[i][j].piece.type  = PieceType::Empty_Piece;
+            board[i][j].piece.color = Color::Empty_Color;
         }
     }
 
@@ -40,9 +40,9 @@ void setBoardFromFEN(const string& fen, Square board[8][8])
         }
         else
         {
-            Color     color     = isupper(c) ? Color::White : Color::Black;
-            PieceType pieceType = PieceTypeMap.at(tolower(c));
-            board[rank][file]   = {pieceType, color};
+            Color     color         = isupper(c) ? Color::White : Color::Black;
+            PieceType pieceType     = PieceTypeMap.at(tolower(c));
+            board[rank][file].piece = {pieceType, color};
             file++;
         }
         i++;

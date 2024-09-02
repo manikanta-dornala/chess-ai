@@ -6,17 +6,14 @@
 using namespace std;
 int main()
 {
-    Square         board[8][8];
-    CastlingRights castlingRights;
-    const string   fen = "rnbqkbnr/pp3ppp/2p1P3/3p4/3P4/8/PPP1P1PP/RNBQKBNR b KQkq - 0 6";
+    Square board[8][8];
+    initializeBoard(board);
+    const string fen = "rnbqkbnr/ppp1pppp/8/3p4/4P3/8/PPPP1PPP/RNBQKBNR w KQkq d6 0 2";
     setBoardFromFEN(fen, board);
-    castlingRights = getCastlingRights(fen);
-    // cout << "hi\n";
-    // cout << castlingRights.white_king_side << castlingRights.white_queen_side
-    //      << castlingRights.black_king_side << castlingRights.black_queen_side << "\n";
+    CastlingRights castlingRights  = getCastlingRights(fen);
+    Color          turn            = getCurrentTurn(fen);
     SquarePosition enpassantTarget = getEnPassantTarget(fen);
-    // cout << files[enpassantTarget.file] << enpassantTarget.rank + 1 << "\n";
     printBoard(board);
-    cout << GetLegalMoves(board, Color::White, castlingRights).size() << "\n";
+    cout << GetLegalMoves(board, turn, castlingRights).size() << "\n";
     return 0;
 }

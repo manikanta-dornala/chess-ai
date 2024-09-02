@@ -1,5 +1,5 @@
 #pragma once
-#include "Piece.hpp"
+#include "Piece.cpp"
 #include <list>
 #include <map>
 #include <string>
@@ -21,10 +21,8 @@ struct Move
 {
     SquarePosition curr;
     SquarePosition target;
-    int            targetRank;
     MoveType       type;
 };
-
 
 // Define vectors of MoveSet for each piece type
 const vector<SquarePosition> rookMoves = {

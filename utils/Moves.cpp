@@ -1,23 +1,26 @@
 #pragma once
-#include "../types/CastlingRights.hpp"
-#include "../types/Color.hpp"
-#include "../types/Move.hpp"
-#include "../types/Square.hpp"
+#include "../types/CastlingRights.cpp"
+#include "../types/Color.cpp"
+#include "../types/Move.cpp"
+#include "../types/Piece.cpp"
+#include "../types/Square.cpp"
+#include "Board.cpp"
 #include <iostream>
 #include <list>
 using namespace std;
 
-list<Move> GetPieceMoves(SquarePosition position, Square board[8][8], Color turn)
+list<Move> GetPieceMoves(SquarePosition position, Square board[8][8])
 {
     list<Move> moves         = list<Move>();
-    Square     pieceAtSquare = board[position.file][position.rank];
+    Piece      pieceAtSquare = board[position.rank][position.file].piece;
     Move       newMove;
-    if (pieceAtSquare.piece == PieceType::Empty_Piece || pieceAtSquare.color != turn)
+    if (pieceAtSquare.type == PieceType::Empty_Piece || pieceAtSquare.type == PieceType::Pawn)
     {
         return moves;
     }
-    const int   moveLimit = pieceAtSquare.piece == PieceType::King || pieceAtSquare.piece == PieceType::Knight ? 1 : 8;
-    const auto& moveTarget   = PieceMoveSets.at(pieceAtSquare.piece);
+    const int moveLimit =
+        pieceAtSquare.type == PieceType::King || pieceAtSquare.type == PieceType::Knight ? 1 : 8;
+    const auto& moveTarget = PieceMoveSets.at(pieceAtSquare.type);
     for (const auto& moveDef : moveTarget)
     {
         int i = 1;
@@ -29,9 +32,9 @@ list<Move> GetPieceMoves(SquarePosition position, Square board[8][8], Color turn
             {
                 continue;
             }
-            const Square pieceAtTarget = board[targetFile][targetRank];
-            const SquarePosition targetPosition = {targetFile, targetRank};
-            if (pieceAtTarget.piece == PieceType::Empty_Piece)
+            const Piece          pieceAtTarget  = board[targetRank][targetFile].piece;
+            const SquarePosition targetPosition = {targetRank, targetFile};
+            if (pieceAtTarget.type == PieceType::Empty_Piece)
             {
                 // Empty Square
                 newMove = {position, targetPosition, MoveType::move};
@@ -52,20 +55,40 @@ list<Move> GetPieceMoves(SquarePosition position, Square board[8][8], Color turn
     return moves;
 }
 
-list<Move> GetPawnMovesForSquare(SquarePosition position, Square board[8][8], Color turn)
+list<Move> GetPawnMovesForSquare(SquarePosition position, Square board[8][8])
 {
     list<Move> moves;
     return moves;
 }
 
-list<Move> GetLegalMovesForSquare(SquarePosition position, Square board[8][8], Color turn)
+list<Move> GetMovesForSquare(SquarePosition position, Square board[8][8])
 {
-    list<Move> moves = GetPieceMoves(position, board, turn);
+    list<Move> moves = GetPieceMoves(position, board);
+    return moves;
+}
+
+list<Move> GetMoves(Square board[8][8], Color turn)
+{
+    list<Move> moves = list<Move>();
+    for (int rank = 7; rank >= 0; --rank)
+    {
+        for (int file = 0; file < 8; ++file)
+        {
+            if (board[rank][file].piece.color == turn)
+            {
+                list<Move> movesAtSquare = GetMovesForSquare({rank, file}, board);
+                // cout << getSquareCode({rank, file}) << " " <<
+                // getPieceCode(board[rank][file].piece)
+                //      << " " << movesAtSquare.size() << "\n";
+                moves.insert(moves.end(), movesAtSquare.begin(), movesAtSquare.end());
+            }
+        }
+    }
     return moves;
 }
 
 list<Move> GetLegalMoves(Square board[8][8], Color turn, CastlingRights castling_rights)
 {
-    list<Move> moves = GetLegalMovesForSquare( {0, 1}, board, Color::White);
+    list<Move> moves = GetMoves(board, turn);
     return moves;
 }
