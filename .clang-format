@@ -1,40 +1,50 @@
-# .clang-format configuration
-
-BasedOnStyle: Microsoft
-IndentWidth: 4
-TabWidth: 4
-UseTab: Never  # Use spaces instead of tabs
-ColumnLimit: 100  # Maximum line width
-BreakBeforeBraces: Allman  # Place braces on a new line
-
-AlignAfterOpenBracket: BlockIndent  # Align code after open brackets
-AlignConsecutiveAssignments: 
-    Enabled: true
-    AcrossEmptyLines: true  # Align consecutive assignments
-AlignConsecutiveDeclarations: true  # Align consecutive declarations
-AllowShortBlocksOnASingleLine: false  # Disallow short blocks on a single line
-AllowShortFunctionsOnASingleLine: InlineOnly  # Allow short functions inline only
-AllowShortIfStatementsOnASingleLine: Never  # Disallow short if statements on a single line
-AllowShortLoopsOnASingleLine: false  # Disallow short loops on a single line
-AlignArrayOfStructures: Left
-
-SortIncludes: true  # Sort include statements
-IncludeBlocks: Preserve  # Preserve include blocks as is
-
-SpacesInParentheses: false  # No spaces inside parentheses
-SpaceBeforeParens: ControlStatements  # Space before parentheses in control statements only
-PointerAlignment: Left  # Align pointers to the left
-
-# Indentation for lambda and closures
-IndentWrappedFunctionNames: true  # Indent when function names are wrapped
-
-# Function declaration/definition formatting
-BreakConstructorInitializers: BeforeComma  # Break constructor initializers before commas
-
-MaxEmptyLinesToKeep: 1  # Maximum number of consecutive empty lines to keep
-
-# Specify language-specific settings if needed
+StatementMacros: ['UPROPERTY', 'UFUNCTION', 'UCLASS', 'USTRUCT', 'UENUM', 'UINTERFACE', 'GENERATED_BODY']
 Language: Cpp
-DerivePointerAlignment: false
+BasedOnStyle: LLVM
 
-
+AccessModifierOffset: -4
+AlignAfterOpenBracket: DontAlign
+AlignConsecutiveDeclarations: true
+AlignEscapedNewlines: Left
+AlignOperands: DontAlign
+AlignTrailingComments: true
+AllowShortBlocksOnASingleLine: Empty
+AllowShortEnumsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortLambdasOnASingleLine: All
+BraceWrapping:
+  AfterCaseLabel: true
+  AfterClass: true
+  AfterControlStatement: true
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: true
+  AfterObjCDeclaration: true
+  AfterStruct: true
+  AfterUnion: true
+  AfterExternBlock: true
+  BeforeCatch: true
+  BeforeElse: true
+  BeforeLambdaBody: false
+  BeforeWhile: true
+  IndentBraces: false
+BreakBeforeBinaryOperators: NonAssignment
+BreakBeforeBraces: Custom
+BreakInheritanceList: AfterColon
+BreakBeforeTernaryOperators: true
+BreakConstructorInitializers: BeforeComma
+BreakStringLiterals: false
+ColumnLimit: 0
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+Cpp11BracedListStyle: false
+EmptyLineBeforeAccessModifier: LogicalBlock
+IndentCaseBlocks: false
+IndentCaseLabels: true
+IndentPPDirectives: BeforeHash
+IndentWidth: 4
+NamespaceIndentation: All
+PointerAlignment: Left
+SortIncludes: false
+SpaceBeforeCaseColon: false
+TabWidth: 4
+UseTab: Always

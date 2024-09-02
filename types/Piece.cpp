@@ -5,56 +5,58 @@ using namespace std;
 
 enum PieceType
 {
-    Empty_Piece = 0,
-    Pawn,
-    Knight,
-    Bishop,
-    Rook,
-    Queen,
-    King
+	PIECETYPE_NIL = 0,
+	PIECETYPE_PAWN,
+	PIECETYPE_KNIGHT,
+	PIECETYPE_BISHOP,
+	PIECETYPE_ROOK,
+	PIECETYPE_QUEEN,
+	PIECETYPE_KING
 };
 
 const map<char, PieceType> PieceTypeMap = {
-    {'p', PieceType::Pawn  },
-    {'n', PieceType::Knight},
-    {'b', PieceType::Bishop},
-    {'r', PieceType::Rook  },
-    {'q', PieceType::Queen },
-    {'k', PieceType::King  }
+	{ 'p', PIECETYPE_PAWN },
+	{ 'n', PIECETYPE_KNIGHT },
+	{ 'b', PIECETYPE_BISHOP },
+	{ 'r', PIECETYPE_ROOK },
+	{ 'q', PIECETYPE_QUEEN },
+	{ 'k', PIECETYPE_KING }
 };
 
 struct Piece
 {
-    PieceType type;
-    Color     color;
+	PieceType type;
+	Color	  color;
 };
 
-char getPieceCode(Piece piece)
+char GetPieceCode(Piece piece)
 {
-    char code = ' ';
-    switch (piece.type)
-    {
-    case PieceType::Pawn:
-        code = 'p';
-        break;
-    case PieceType::Knight:
-        code = 'n';
-        break;
-    case PieceType::Bishop:
-        code = 'b';
-        break;
-    case PieceType::Rook:
-        code = 'r';
-        break;
-    case PieceType::Queen:
-        code = 'q';
-        break;
-    case PieceType::King:
-        code = 'k';
-        break;
-    default:
-        code = '.';
-        break;
-    }
-    return piece.color == Color::White ? toupper(code) : tolower(code);
+	char code = ' ';
+	switch (piece.type)
+	{
+		case PIECETYPE_PAWN:
+			code = 'p';
+			break;
+		case PIECETYPE_KNIGHT:
+			code = 'n';
+			break;
+		case PIECETYPE_BISHOP:
+			code = 'b';
+			break;
+		case PIECETYPE_ROOK:
+			code = 'r';
+			break;
+		case PIECETYPE_QUEEN:
+			code = 'q';
+			break;
+		case PIECETYPE_KING:
+			code = 'k';
+			break;
+		default:
+			code = '.';
+			break;
+	}
+	return piece.color == COLOR_WHITE ? toupper(code) : tolower(code);
 }
+
+const Piece DefaultPiece = { .type = PIECETYPE_NIL, .color = COLOR_NIL };

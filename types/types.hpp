@@ -1,0 +1,6 @@
+#include "CastlingRights.cpp"
+#include "Color.cpp"
+#include "Move.cpp"
+#include "MoveSet.cpp"
+#include "Piece.cpp"
+#include "Square.cpp"
