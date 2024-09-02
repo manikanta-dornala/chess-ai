@@ -1,8 +1,10 @@
 #pragma once
 #include "../utils/utils.hpp"
-#include "Move.cpp"
-#include "Piece.cpp"
-#include "Square.cpp"
+#include "../structs/structs.hpp"
+#include "../enums/enums.hpp"
+
+#include <iostream>
+using namespace std;
 
 // Define vectors of MoveSet for each piece type
 const vector<SquarePosition> rook_moveset = {

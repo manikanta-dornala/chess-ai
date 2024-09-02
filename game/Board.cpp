@@ -1,7 +1,8 @@
 #pragma once
 #include <iostream>
-#include <string>
-#include "../types/types.hpp"
+#include <list>
+#include "game.hpp"
+using namespace std;
 
 using namespace std;
 

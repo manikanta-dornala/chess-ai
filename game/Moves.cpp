@@ -1,8 +1,7 @@
 #pragma once
-#include "../types/types.hpp"
-#include "Board.cpp"
 #include <iostream>
 #include <list>
+#include "game.hpp"
 using namespace std;
 
 vector<Move> GetPieceMoves(const SquarePosition position, const Square board[8][8])

@@ -1,9 +1,7 @@
 #pragma once
-#include "../game/Board.cpp"
-#include "../types/CastlingRights.cpp"
-#include "../types/Square.cpp"
 #include <iostream>
 #include <string>
+#include "utils.hpp"
 using namespace std;
 
 void SetBoardFromFEN(const string& fen, Square board[8][8])
