@@ -26,6 +26,58 @@
 *.a
 *.lib
 
+# Ignore build directories
+build/
+cmake-build-debug/
+cmake-build-release/
+CMakeFiles/
+
+# Ignore binary files and object files
+*.exe
+*.out
+*.o
+*.obj
+*.so
+*.dll
+*.dylib
+*.a
+*.lib
+
+# Ignore compiled static libraries
+*.la
+
+# Ignore C++ debugging symbols and logs
+*.dSYM/
+*.stackdump
+
+# Ignore generated files by the IDE or editor
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Ignore temporary and backup files
+*~
+*.swp
+*.tmp
+*.temp
+*.log
+*.pid
+*.seed
+*.old
+*.orig
+*.bak
+
+# Ignore specific IDE files (VSCode, CLion, etc.)
+.vscode/
+.idea/
+*.code-workspace
+
+# Ignore OS-generated files
+.DS_Store
+Thumbs.db
+
+
 # Executables
 *.exe
 *.out
