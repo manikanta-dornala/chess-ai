@@ -91,11 +91,6 @@ namespace Board
         }
     }
 
-    float getScoreForBoard(const Piece (&board)[8][8], const Color& turn)
-    {
-        return 0.0;
-    }
-
     Position GetKingPosition(const Color turn, const Piece (&board)[8][8])
     {
         for (int rank = 7; rank >= 0; --rank)

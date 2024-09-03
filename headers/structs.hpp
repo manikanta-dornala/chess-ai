@@ -42,4 +42,6 @@ class Piece
     char      GetPieceCode() const;
 };
 
+using BoardArray = std::array<std::array<Piece, 8>, 8>;
+
 // expr Piece DefaultPiece = { .type = PIECETYPE_NIL, .color = COLOR_NIL };

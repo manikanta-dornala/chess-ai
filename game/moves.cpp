@@ -203,6 +203,10 @@ namespace Moves
         return validMoves;
     }
 
+    // Piece * MakeMove(Move move, Color turn, const Piece (&board)[8][8]){
+
+    // }
+
     vector<Move> FilterMovesThatLandKingInCheck(vector<Move> moves, const Color turn, const Piece (&board)[8][8])
     {
         vector<Move> validMoves;
@@ -278,7 +282,8 @@ namespace Moves
         {
             king_target_file = 6;
             passover_file = 5;
-            isEmpty = Board::IsPositionEmpty({ .rank = rank, .file = 5 }, board) && Board::IsPositionEmpty({ .rank = rank, .file = 6 }, board);
+            isEmpty = Board::IsPositionEmpty({ .rank = rank, .file = 5 }, board)
+                && Board::IsPositionEmpty({ .rank = rank, .file = 6 }, board);
             if (isEmpty)
             {
                 kingWillBeInCheckPassingOver = Board::IsKingInCheckAt(turn, { .rank = rank, .file = passover_file }, board);
@@ -294,7 +299,9 @@ namespace Moves
         {
             king_target_file = 2;
             passover_file = 3;
-            isEmpty = Board::IsPositionEmpty({ .rank = rank, .file = 1 }, board) && Board::IsPositionEmpty({ .rank = rank, .file = 2 }, board) && Board::IsPositionEmpty({ .rank = rank, .file = 3 }, board);
+            isEmpty = Board::IsPositionEmpty({ .rank = rank, .file = 1 }, board)
+                && Board::IsPositionEmpty({ .rank = rank, .file = 2 }, board)
+                && Board::IsPositionEmpty({ .rank = rank, .file = 3 }, board);
             if (isEmpty)
             {
                 kingWillBeInCheckPassingOver = Board::IsKingInCheckAt(turn, { .rank = rank, .file = passover_file }, board);
