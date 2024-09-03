@@ -14,7 +14,7 @@ namespace Board
 		{
 			for (int col = 0; col < 8; ++col)
 			{
-				board[row][col].piece = Piece();
+				board[row][col].piece = { .type = PIECETYPE_NIL, .color = COLOR_NIL };
 			}
 		}
 
@@ -71,13 +71,16 @@ namespace Board
 		return numPieces;
 	}
 
-	Piece GetPieceAtPosition(const Square board[8][8], const Position position)
+	Piece GetPieceAtPosition(Position position, const Square board[8][8])
 	{
+		Piece piece = { .type = PIECETYPE_NIL, .color = COLOR_NIL };
 		if (position.IsValidPosition())
 		{
-			return board[position.rank][position.file].piece;
+			const auto piece_at_position = board[position.rank][position.file].piece;
+			piece.color = piece_at_position.color;
+			piece.type = piece_at_position.type;
 		}
-		return Piece();
+		return piece;
 	}
 
 	void printBoard(const Square board[8][8])
@@ -86,7 +89,7 @@ namespace Board
 		{
 			for (int file = 0; file < 8; ++file)
 			{
-				auto piece = GetPieceAtPosition(board, { .rank = rank, .file = file });
+				auto piece = GetPieceAtPosition({ .rank = rank, .file = file }, board);
 				char pieceChar = piece.GetPieceCode();
 				std::cout << pieceChar << " ";
 			}

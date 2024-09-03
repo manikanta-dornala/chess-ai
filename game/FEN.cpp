@@ -7,6 +7,15 @@
 using namespace std;
 namespace FEN
 {
+	const map<char, PieceType> PieceTypeMap = {
+		{ 'p', PIECETYPE_PAWN },
+		{ 'n', PIECETYPE_KNIGHT },
+		{ 'b', PIECETYPE_BISHOP },
+		{ 'r', PIECETYPE_ROOK },
+		{ 'q', PIECETYPE_QUEEN },
+		{ 'k', PIECETYPE_KING }
+	};
+
 	void SetBoard(const string& fen, Square board[8][8])
 	{
 		// Clear the board

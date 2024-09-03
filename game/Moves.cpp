@@ -12,7 +12,7 @@ namespace Moves
 	vector<Move> GetPieceMoves(const Position position, const Square board[8][8])
 	{
 		auto  moves = vector<Move>();
-		Piece piece = Board::GetPieceAtPosition(board, position);
+		Piece piece = Board::GetPieceAtPosition(position, board);
 		if (piece.type == PIECETYPE_NIL || piece.type == PIECETYPE_PAWN)
 		{
 			return moves;
@@ -32,7 +32,7 @@ namespace Moves
 				if (target_position.IsValidPosition())
 					continue;
 
-				const Piece piece_at_target = Board::GetPieceAtPosition(board, target_position);
+				const Piece piece_at_target = Board::GetPieceAtPosition(target_position, board);
 
 				if (piece_at_target.type == PIECETYPE_NIL)
 				{
@@ -64,7 +64,7 @@ namespace Moves
 	vector<Move> GetPawnMovesForSquare(const Position position, const Square board[8][8])
 	{
 		vector<Move> moves = {};
-		const auto	 piece = Board::GetPieceAtPosition(board, position);
+		const auto	 piece = Board::GetPieceAtPosition(position, board);
 		if (piece.type != PIECETYPE_PAWN)
 			return moves;
 
@@ -75,7 +75,7 @@ namespace Moves
 			.rank = position.rank + unit_move,
 			.file = position.file,
 		};
-		if (forward_one.IsValidPosition() && Board::GetPieceAtPosition(board, forward_one).type == PIECETYPE_NIL)
+		if (forward_one.IsValidPosition() && Board::GetPieceAtPosition(forward_one, board).type == PIECETYPE_NIL)
 		{
 			moves.push_back({
 				.curr = position,
@@ -91,7 +91,7 @@ namespace Moves
 					.rank = position.rank + 2 * unit_move,
 					.file = position.file,
 				};
-				if (forward_two.IsValidPosition() && Board::GetPieceAtPosition(board, forward_two).type == PIECETYPE_NIL)
+				if (forward_two.IsValidPosition() && Board::GetPieceAtPosition(forward_two, board).type == PIECETYPE_NIL)
 				{
 					moves.push_back({
 						.curr = position,
@@ -111,7 +111,7 @@ namespace Moves
 		{
 			if (!capture_position.IsValidPosition())
 				continue;
-			const Piece piece_at_target = Board::GetPieceAtPosition(board, capture_position);
+			const Piece piece_at_target = Board::GetPieceAtPosition(capture_position, board);
 			if (piece_at_target.type != PIECETYPE_NIL && piece.color != piece_at_target.color)
 			{
 				moves.push_back({
@@ -141,9 +141,11 @@ namespace Moves
 		{
 			for (int file = 0; file < 8; ++file)
 			{
-				if (Board::GetPieceAtPosition(board, { .rank = rank, .file = file }).color == turn)
+				Position position = { .rank = rank, .file = file };
+				Piece	 piece_at_position = Board::GetPieceAtPosition(position, board);
+				if (piece_at_position.color == turn)
 				{
-					vector<Move> moves_at_square = GetMovesForSquare({ .rank = rank, .file = file }, board);
+					vector<Move> moves_at_square = GetMovesForSquare(position, board);
 					// cout << GetSquareCode({rank, file}) << " " <<
 					// GetPieceCode(board[rank][file].piece)
 					//      << " " << moves_at_square.size() << "\n";
@@ -157,9 +159,7 @@ namespace Moves
 		return moves;
 	}
 
-	vector<Move> GetEnpassantMoves(
-		const Position enapassant_target,
-		const Square   board[8][8])
+	vector<Move> GetEnpassantMoves(const Position enapassant_target, const Square board[8][8])
 	{
 		auto moves = vector<Move>();
 		int	 capture_rank;
@@ -170,7 +170,7 @@ namespace Moves
 		else
 			return moves;
 
-		auto capture_piece = Board::GetPieceAtPosition(board, { .rank = capture_rank, .file = enapassant_target.file });
+		auto capture_piece = Board::GetPieceAtPosition({ .rank = capture_rank, .file = enapassant_target.file }, board);
 
 		Position positions[2] = {
 			{ .rank = capture_rank, .file = enapassant_target.file + 1 },
@@ -180,7 +180,7 @@ namespace Moves
 		{
 			if (position.IsValidPosition())
 			{
-				Piece piece = Board::GetPieceAtPosition(board, position);
+				Piece piece = Board::GetPieceAtPosition(position, board);
 				if (piece.color != capture_piece.color && piece.type != PIECETYPE_NIL)
 				{
 					moves.push_back({
@@ -195,11 +195,7 @@ namespace Moves
 		return moves;
 	}
 
-	vector<Move> GetLegalMoves(
-		const Color			 turn,
-		const CastlingRights castling_rights,
-		const Position		 enpassant_target,
-		const Square		 board[8][8])
+	vector<Move> GetLegalMoves(const Color turn, const CastlingRights castling_rights, const Position enpassant_target, const Square board[8][8])
 	{
 		auto moves = GetRegularMoves(turn, board);
 		auto enpassant_moves = GetEnpassantMoves(enpassant_target, board);

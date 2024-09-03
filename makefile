@@ -1,6 +1,6 @@
 # Compiler and flags
-CXX = g++
-CXXFLAGS = -Wall -std=c++17
+CXX = clang++
+CXXFLAGS = -Wall -std=c++17 -g -fsanitize=address
 
 # Find all .cpp files recursively in the current directory and subdirectories
 SOURCES = $(shell find . -name "*.cpp")
@@ -12,7 +12,7 @@ OBJECTS = $(SOURCES:.cpp=.o)
 TARGET = ChessAI
 
 # Default rule to build the target
-all: $(TARGET)
+all: clean $(TARGET)
 
 # Rule to build the target executable from object files
 $(TARGET): $(OBJECTS)

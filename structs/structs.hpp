@@ -35,8 +35,8 @@ const vector<Position>& GetPieceMoveSet(PieceType piece_type);
 class Piece
 {
 	public:
-	PieceType type = PIECETYPE_NIL;
-	Color	  color = COLOR_NIL;
+	PieceType type;
+	Color	  color;
 	char	  GetPieceCode();
 };
 

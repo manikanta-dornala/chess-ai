@@ -11,12 +11,3 @@ enum PieceType
 	PIECETYPE_QUEEN,
 	PIECETYPE_KING
 };
-
-const map<char, PieceType> PieceTypeMap = {
-	{ 'p', PIECETYPE_PAWN },
-	{ 'n', PIECETYPE_KNIGHT },
-	{ 'b', PIECETYPE_BISHOP },
-	{ 'r', PIECETYPE_ROOK },
-	{ 'q', PIECETYPE_QUEEN },
-	{ 'k', PIECETYPE_KING }
-};
