@@ -8,7 +8,7 @@
 #include "structs.hpp"
 using namespace std;
 
-string Position::GetSquareCode()
+string Position::GetSquareCode() const
 {
 	string result = "..";
 	result[0] = 'a' + this->file;
@@ -16,7 +16,7 @@ string Position::GetSquareCode()
 	return result;
 }
 
-bool Position::IsValidPosition()
+bool Position::IsValidPosition() const
 {
 	return this->rank >= 0 && this->rank <= 7 && this->file >= 0 && this->file <= 7;
 }

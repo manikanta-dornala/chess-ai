@@ -17,10 +17,10 @@ class Position
 	int file;
 
 	public:
-	bool IsValidPosition();
+	bool IsValidPosition() const;
 
 	public:
-	string GetSquareCode();
+	string GetSquareCode() const;
 };
 
 struct Move

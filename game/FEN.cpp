@@ -16,7 +16,7 @@ namespace FEN
 		{ 'k', PIECETYPE_KING }
 	};
 
-	void SetBoard(string& fen, Square board[8][8])
+	void SetBoard(const string& fen, Square board[8][8])
 	{
 		// Clear the board
 		for (int i = 0; i < 8; ++i)
@@ -59,7 +59,7 @@ namespace FEN
 		}
 	}
 
-	Color GetCurrentTurn(string& fen)
+	Color GetCurrentTurn(const string& fen)
 	{
 		int i = 0;
 
@@ -74,7 +74,7 @@ namespace FEN
 		return COLOR_NIL;
 	}
 
-	CastlingRights GetCastlingRights(string& fen)
+	CastlingRights GetCastlingRights(const string& fen)
 	{
 		int i = 0;
 		while (fen[i] != ' ')
@@ -94,7 +94,7 @@ namespace FEN
 		return rights;
 	}
 
-	Position GetEnPassantTarget(string& fen)
+	Position GetEnPassantTarget(const string& fen)
 	{
 		int i = 0;
 		while (fen[i] != ' ')

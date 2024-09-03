@@ -6,9 +6,9 @@
 using namespace std;
 namespace FEN
 {
-	void		   SetBoard(string& fen, Square board[8][8]);
-	Color		   GetCurrentTurn(string& fen);
-	CastlingRights GetCastlingRights(string& fen);
-	Position	   GetEnPassantTarget(string& fen);
+	void		   SetBoard(const string& fen, Square board[8][8]);
+	Color		   GetCurrentTurn(const string& fen);
+	CastlingRights GetCastlingRights(const string& fen);
+	Position	   GetEnPassantTarget(const string& fen);
 
 } // namespace FEN
