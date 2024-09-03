@@ -22,14 +22,7 @@ class Position
     bool IsValidPosition() const;
 
     public:
-    string GetPieceCode() const;
-};
-
-struct Move
-{
-    Position curr;
-    Position target;
-    MoveType type;
+    string GetPositionCode() const;
 };
 
 vector<Position>& GetPieceMoveDestinations(PieceType& piece_type);
@@ -43,5 +36,14 @@ class Piece
 };
 
 using BoardArray = std::array<std::array<Piece, 8>, 8>;
+
+struct Move
+{
+    Position curr;
+    Position target;
+    Piece    Piece;
+    MoveType type;
+    string   getPGN();
+};
 
 // expr Piece DefaultPiece = { .type = PIECETYPE_NIL, .color = COLOR_NIL };

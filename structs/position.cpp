@@ -4,7 +4,7 @@
 
 using namespace std;
 
-string Position::GetPieceCode() const
+string Position::GetPositionCode() const
 {
     string result = "..";
     result[0] = 'a' + this->file;

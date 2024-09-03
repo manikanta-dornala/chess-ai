@@ -5,7 +5,7 @@ using namespace std;
 namespace Moves
 {
 
-    vector<Move> GetPawnMovesForPieceAt(const Position& position, const Piece (&board)[8][8])
+    vector<Move> GetPawnMovesForPieceAt(const Position& position, const BoardArray& board)
     {
         vector<Move> moves;
         auto         piece = Board::GetPieceAtPosition(position, board);
@@ -69,7 +69,7 @@ namespace Moves
         return moves;
     }
 
-    vector<Move> GetMovesForPieceAt(const Position& position, const Piece (&board)[8][8])
+    vector<Move> GetMovesForPieceAt(const Position& position, const BoardArray& board)
     {
 
         auto         moves = vector<Move>();
@@ -126,7 +126,7 @@ namespace Moves
         return moves;
     }
 
-    vector<Move> GetRegularMoves(const Color& turn, const Piece (&board)[8][8])
+    vector<Move> GetRegularMoves(const Color& turn, const BoardArray& board)
     {
         vector<Move> moves = vector<Move>();
         for (int rank = 7; rank >= 0; --rank)
@@ -138,7 +138,7 @@ namespace Moves
                 if (piece_at_position.color == turn)
                 {
                     vector<Move> moves_at_Piece = GetMovesForPieceAt(position, board);
-                    cout << position.GetPieceCode() << " " << piece_at_position.GetPieceCode() << " " << moves_at_Piece.size() << "\n";
+                    cout << position.GetPositionCode() << " " << piece_at_position.GetPieceCode() << " " << moves_at_Piece.size() << "\n";
                     moves.insert(
                         moves.end(),
                         moves_at_Piece.begin(),
@@ -150,7 +150,7 @@ namespace Moves
         return moves;
     }
 
-    vector<Move> GetEnpassantCaptures(const Position& enapassant_target, const Piece (&board)[8][8])
+    vector<Move> GetEnpassantCaptures(const Position& enapassant_target, const BoardArray& board)
     {
         auto moves = vector<Move>();
         int  capture_rank;
@@ -179,7 +179,7 @@ namespace Moves
                         .target = enapassant_target,
                         .type = MOVETYPE_ENPASSANT,
                     });
-                    cout << position.GetPieceCode() << " " << piece.GetPieceCode() << " " << 1 << "\n";
+                    cout << position.GetPositionCode() << " " << piece.GetPieceCode() << " " << 1 << "\n";
                 }
             }
         }
@@ -187,7 +187,7 @@ namespace Moves
         return moves;
     }
 
-    vector<Move> GetLegalMoves(const Color& turn, const CastlingRights& castling_rights, const Position& enpassant_target, const Piece (&board)[8][8])
+    vector<Move> GetLegalMoves(const Color& turn, const CastlingRights& castling_rights, const Position& enpassant_target, const BoardArray& board)
     {
         auto moves = GetRegularMoves(turn, board);
 
@@ -203,66 +203,26 @@ namespace Moves
         return validMoves;
     }
 
-    // Piece * MakeMove(Move move, Color turn, const Piece (&board)[8][8]){
-
-    // }
-
-    vector<Move> FilterMovesThatLandKingInCheck(vector<Move> moves, const Color turn, const Piece (&board)[8][8])
+    vector<Move> FilterMovesThatLandKingInCheck(vector<Move> moves, const Color turn, const BoardArray& board)
     {
         vector<Move> validMoves;
-        Position     king_position = Board::GetKingPosition(turn, board);
         for (auto move : moves)
         {
-            Piece boardCopy[8][8];
-            Board::copyBoard(board, boardCopy);
-            auto        piece = Board::GetPieceAtPosition(move.curr, boardCopy);
-            const Piece nil_piece = { PIECETYPE_NIL, COLOR_NIL };
-            switch (move.type)
-            {
-                case MOVETYPE_MOVE:
-                case MOVETYPE_DOUBLE_MOVE:
-                case MOVETYPE_CAPTURE:
-                    boardCopy[move.target.rank][move.target.file] = piece;
-                    boardCopy[move.curr.rank][move.curr.file] = nil_piece;
-                    break;
-                case MOVETYPE_ENPASSANT:
-                {
-                    boardCopy[move.target.rank][move.target.file] = piece;
-                    boardCopy[move.curr.rank][move.curr.file] = nil_piece;
-                    Position enpassant_capture = {
-                        .rank = piece.color == COLOR_WHITE ? 4 : 3,
-                        .file = move.target.file
-                    };
-                    boardCopy[enpassant_capture.rank][enpassant_capture.file] = nil_piece;
-                }
-                case MOVETYPE_CASTLING:
-                {
-                    boardCopy[move.target.rank][move.target.file] = piece;
-                    boardCopy[move.curr.rank][move.curr.file] = nil_piece;
-                    Position rook_curr_position = {
-                        .rank = move.target.rank,
-                        .file = move.target.file == 2 ? 0 : 7
-                    };
-                    Position rook_final_position = {
-                        .rank = move.target.rank,
-                        .file = move.target.file == 2 ? 3 : 5
-                    };
-                    boardCopy[rook_final_position.rank][rook_final_position.file] = { .type = PIECETYPE_ROOK, .color = piece.color };
-                    boardCopy[rook_curr_position.rank][rook_curr_position.file] = nil_piece;
-                    king_position = move.target;
-                }
-                default:
-                    break;
-            }
-            if (!Board::IsKingInCheckAt(turn, king_position, boardCopy))
+            BoardArray new_board = Board::NewBoardAfterMove(move, turn, board);
+            if (!Board::IsKingInCheck(turn, new_board))
             {
                 validMoves.push_back(move);
+                cout << move.curr.GetPositionCode() << " " << move.target.GetPositionCode() << " " << Board::getSimpleValueForBoard(turn, new_board) << "\n";
+            }
+            else
+            {
+                cout << move.curr.GetPositionCode() << " " << move.target.GetPositionCode() << " " << Board::getSimpleValueForBoard(turn, new_board) << "\n";
             }
         }
         return validMoves;
     }
 
-    vector<Move> GetCastlingMoves(const Color& turn, const CastlingRights& castling_rights, const Piece (&board)[8][8])
+    vector<Move> GetCastlingMoves(const Color& turn, const CastlingRights& castling_rights, const BoardArray& board)
     {
         vector<Move> moves;
         int          king_file = 4;

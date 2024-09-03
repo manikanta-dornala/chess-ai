@@ -9,15 +9,16 @@ using namespace std;
 namespace Board
 {
     // Board
-    void         InitializeBoard(Piece (&board)[8][8]);
-    void         copyBoard(const Piece (&original)[8][8], Piece (&newBoard)[8][8]);
-    int          numPiecesOnBoard(const Piece (&board)[8][8]);
-    const Piece& GetPieceAtPosition(const Position& position, const Piece (&board)[8][8]);
-    void         printBoard(const Piece (&board)[8][8]);
-    bool         IsPositionEmpty(const Position& position, const Piece (&board)[8][8]);
-    bool         IsKingInCheck(const Color turn, const Piece (&board)[8][8]);
-    bool         IsKingInCheckAt(const Color turn, const Position& king_position, const Piece (&board)[8][8]);
-    Position     GetKingPosition(const Color turn, const Piece (&board)[8][8]);
+    void         InitializeBoard(BoardArray& board);
+    void         copyBoard(const BoardArray& orignal, BoardArray& newBoard);
+    int          numPiecesOnBoard(const BoardArray& board);
+    const Piece& GetPieceAtPosition(const Position& position, const BoardArray& board);
+    void         printBoard(const BoardArray& board);
+    bool         IsPositionEmpty(const Position& position, const BoardArray& board);
+    bool         IsKingInCheck(const Color turn, const BoardArray& board);
+    bool         IsKingInCheckAt(const Color turn, const Position& king_position, const BoardArray& board);
+    Position     GetKingPosition(const Color turn, const BoardArray& board);
+    BoardArray   NewBoardAfterMove(Move move, Color turn, const BoardArray& board);
 
-    int getSimpleValueForBoard(const Color& turn, const Piece (&board)[8][8]);
+    int getSimpleValueForBoard(const Color& turn, const BoardArray& board);
 } // namespace Board
