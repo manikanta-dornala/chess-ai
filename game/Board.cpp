@@ -1,20 +1,17 @@
-
-#include <iostream>
-#include <list>
-#include "../utils/utils.hpp"
-#include "../enums/enums.hpp"
-#include "../structs/structs.hpp"
+#include "../headers/chessai.hpp"
 using namespace std;
 
 namespace Board
 {
-	void InitializeBoard(Square (&board)[8][8])
+	const Piece DefaultPiece = { .type = PIECETYPE_NIL, .color = COLOR_NIL };
+
+	void		InitializeBoard(Square (&board)[8][8])
 	{
 		for (int row = 0; row < 8; ++row)
 		{
 			for (int col = 0; col < 8; ++col)
 			{
-				board[row][col].piece = { .type = PIECETYPE_NIL, .color = COLOR_NIL };
+				board[row][col].piece = DefaultPiece;
 			}
 		}
 
@@ -71,13 +68,13 @@ namespace Board
 		return numPieces;
 	}
 
-	Piece GetPieceAtPosition(const Position& position, const Square (&board)[8][8])
+	const Piece& GetPieceAtPosition(const Position& position, const Square (&board)[8][8])
 	{
 		if (position.IsValidPosition())
 		{
 			return board[position.rank][position.file].piece;
 		}
-		return { .type = PIECETYPE_NIL, .color = COLOR_NIL };
+		return DefaultPiece;
 	}
 
 	void printBoard(const Square (&board)[8][8])
@@ -87,7 +84,7 @@ namespace Board
 			for (int file = 0; file < 8; ++file)
 			{
 				auto piece = GetPieceAtPosition({ .rank = rank, .file = file }, board);
-				char pieceChar = piece.GetPieceCode();
+				char   pieceChar = piece.GetPieceCode();
 				std::cout << pieceChar << " ";
 			}
 			std::cout << std::endl;

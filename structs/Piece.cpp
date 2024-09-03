@@ -1,11 +1,9 @@
 
-#include "../enums/enums.hpp"
-#include <iostream>
-#include <string>
-#include "structs.hpp"
+#include "../headers/chessai.hpp"
+
 using namespace std;
 
-char Piece::GetPieceCode()
+char Piece::GetPieceCode() const
 {
 	char code = ' ';
 	switch (this->type)

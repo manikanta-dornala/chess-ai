@@ -1,6 +1,4 @@
-#include "game/Board.hpp"
-#include "game/FEN.hpp"
-#include "game/Moves.hpp"
+#include "headers/chessai.hpp"
 #include <iostream>
 #include <string>
 using namespace std;

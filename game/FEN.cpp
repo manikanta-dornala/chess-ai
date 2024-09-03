@@ -1,9 +1,4 @@
-
-#include <iostream>
-#include <string>
-#include "../utils/utils.hpp"
-#include "../enums/enums.hpp"
-#include "../structs/structs.hpp"
+#include "../headers/chessai.hpp"
 using namespace std;
 namespace FEN
 {

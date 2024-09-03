@@ -1,4 +1,6 @@
 #pragma once
+#include "enums.hpp"
+using namespace std;
 
 struct CastlingRights
 {
@@ -37,7 +39,7 @@ class Piece
 	public:
 	PieceType type;
 	Color	  color;
-	char	  GetPieceCode();
+	char	  GetPieceCode() const;
 };
 
 // expr Piece DefaultPiece = { .type = PIECETYPE_NIL, .color = COLOR_NIL };

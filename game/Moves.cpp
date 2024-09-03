@@ -1,10 +1,5 @@
+#include "../headers/chessai.hpp"
 
-#include <iostream>
-#include <list>
-#include "../utils/utils.hpp"
-#include "../enums/enums.hpp"
-#include "../structs/structs.hpp"
-#include "Board.hpp"
 using namespace std;
 
 namespace Moves

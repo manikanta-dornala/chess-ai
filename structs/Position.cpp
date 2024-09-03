@@ -1,11 +1,7 @@
 
 
-#include <iostream>
-#include <string>
-#include <map>
-#include "../enums/enums.hpp"
-#include "../utils/utils.hpp"
-#include "structs.hpp"
+#include "../headers/chessai.hpp"
+
 using namespace std;
 
 string Position::GetSquareCode() const

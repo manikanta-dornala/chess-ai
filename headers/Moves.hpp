@@ -1,8 +1,8 @@
 #pragma once
 #include <iostream>
 #include <list>
-#include "../enums/enums.hpp"
-#include "../structs/structs.hpp"
+#include "enums.hpp"
+#include "structs.hpp"
 using namespace std;
 
 namespace Moves
