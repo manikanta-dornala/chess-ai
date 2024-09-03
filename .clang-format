@@ -32,10 +32,10 @@ BreakBeforeBinaryOperators: NonAssignment
 BreakBeforeBraces: Custom
 BreakInheritanceList: AfterColon
 BreakBeforeTernaryOperators: true
-BreakConstructorInitializers: BeforeComma
+BreakructorInitializers: BeforeComma
 BreakStringLiterals: false
 ColumnLimit: 0
-ConstructorInitializerAllOnOneLineOrOnePerLine: true
+ructorInitializerAllOnOneLineOrOnePerLine: true
 Cpp11BracedListStyle: false
 EmptyLineBeforeAccessModifier: LogicalBlock
 IndentCaseBlocks: false

@@ -43,7 +43,7 @@ namespace Board
 		board[7][4].piece = { .type = PIECETYPE_KING, .color = COLOR_BLACK };
 	}
 
-	void copyBoard(const Square original[8][8], Square newBoard[8][8])
+	void copyBoard(Square original[8][8], Square newBoard[8][8])
 	{
 		for (int i = 0; i < 8; i++)
 		{
@@ -55,7 +55,7 @@ namespace Board
 		}
 	}
 
-	int numPiecesOnBoard(const Square board[8][8])
+	int numPiecesOnBoard(Square board[8][8])
 	{
 		int numPieces = 0;
 		for (int i = 0; i < 8; i++)
@@ -71,19 +71,16 @@ namespace Board
 		return numPieces;
 	}
 
-	Piece GetPieceAtPosition(Position position, const Square board[8][8])
+	Piece GetPieceAtPosition(Position position, Square board[8][8])
 	{
-		Piece piece = { .type = PIECETYPE_NIL, .color = COLOR_NIL };
 		if (position.IsValidPosition())
 		{
-			const auto piece_at_position = board[position.rank][position.file].piece;
-			piece.color = piece_at_position.color;
-			piece.type = piece_at_position.type;
+			return board[position.rank][position.file].piece;
 		}
-		return piece;
+		return { .type = PIECETYPE_NIL, .color = COLOR_NIL };
 	}
 
-	void printBoard(const Square board[8][8])
+	void printBoard(Square board[8][8])
 	{
 		for (int rank = 7; rank >= 0; --rank)
 		{
@@ -97,7 +94,7 @@ namespace Board
 		}
 	}
 
-	float getScoreForBoard(const Square board[8][8], Color turn)
+	float getScoreForBoard(Square board[8][8], Color turn)
 	{
 		return 0.0;
 	}

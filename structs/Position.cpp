@@ -8,32 +8,32 @@
 #include "structs.hpp"
 using namespace std;
 
-string Position::GetSquareCode() const
+string Position::GetSquareCode()
 {
-	char result[2];
+	string result = "..";
 	result[0] = 'a' + this->file;
 	result[1] = '1' + this->rank;
-	return string(result);
+	return result;
 }
 
-bool Position::IsValidPosition() const
+bool Position::IsValidPosition()
 {
-	return this->rank >= 0 && this->rank <= 7 && this->file >= 0 && this->rank <= 7;
+	return this->rank >= 0 && this->rank <= 7 && this->file >= 0 && this->file <= 7;
 }
 // Define vectors of MoveSet for each piece type
-const vector<Position> rook_moveset = {
+vector<Position> rook_moveset = {
 	{ .rank = 0, .file = 1 },
 	{ .rank = 0, .file = -1 },
 	{ .rank = 1, .file = 0 },
 	{ .rank = -1, .file = 0 }
 };
-const vector<Position> bishop_moveset = {
+vector<Position> bishop_moveset = {
 	{ .rank = 1, .file = 1 },
 	{ .rank = 1, .file = -1 },
 	{ .rank = -1, .file = 1 },
 	{ .rank = -1, .file = -1 }
 };
-const vector<Position> knight_moveset = {
+vector<Position> knight_moveset = {
 	{ .rank = 2, .file = 1 },
 	{ .rank = 2, .file = -1 },
 	{ .rank = -2, .file = 1 },
@@ -43,9 +43,9 @@ const vector<Position> knight_moveset = {
 	{ .rank = -1, .file = 2 },
 	{ .rank = -1, .file = -2 }
 };
-const vector<Position>	queen_moveset = Concatenate(rook_moveset, bishop_moveset);
-const vector<Position>	nil_moveset = vector<Position>();
-const vector<Position>& GetPieceMoveSet(PieceType piece_type)
+vector<Position>  queen_moveset = Concatenate(rook_moveset, bishop_moveset);
+vector<Position>  nil_moveset = vector<Position>();
+vector<Position>& GetPieceMoveSet(PieceType piece_type)
 {
 
 	switch (piece_type)

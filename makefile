@@ -12,7 +12,7 @@ OBJECTS = $(SOURCES:.cpp=.o)
 TARGET = ChessAI
 
 # Default rule to build the target
-all: clean $(TARGET)
+all:  $(TARGET)
 
 # Rule to build the target executable from object files
 $(TARGET): $(OBJECTS)

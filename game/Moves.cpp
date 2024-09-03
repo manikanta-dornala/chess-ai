@@ -9,7 +9,7 @@ using namespace std;
 
 namespace Moves
 {
-	vector<Move> GetPieceMoves(const Position position, const Square board[8][8])
+	vector<Move> GetPieceMoves(Position position, Square board[8][8])
 	{
 		auto  moves = vector<Move>();
 		Piece piece = Board::GetPieceAtPosition(position, board);
@@ -17,61 +17,65 @@ namespace Moves
 		{
 			return moves;
 		}
-		const int  move_limit = piece.type == PIECETYPE_KING || piece.type == PIECETYPE_KNIGHT ? 1 : 8;
-		const auto move_set = GetPieceMoveSet(piece.type);
-		for (const auto unit_move : move_set)
+		int	 move_limit = piece.type == PIECETYPE_KING || piece.type == PIECETYPE_KNIGHT ? 1 : 8;
+		auto move_set = GetPieceMoveSet(piece.type);
+		if (piece.type == PIECETYPE_BISHOP)
+		{
+			2 + 2;
+		}
+		for (auto unit_move : move_set)
 		{
 			int i = 1;
 			for (i = 1; i < move_limit + 1; i++)
 			{
-				const Position target_position = {
+				Position target_position = {
 					.rank = position.rank + (unit_move.rank * i),
 					.file = position.file + (unit_move.file * i)
 				};
 
 				if (target_position.IsValidPosition())
-					continue;
-
-				const Piece piece_at_target = Board::GetPieceAtPosition(target_position, board);
-
-				if (piece_at_target.type == PIECETYPE_NIL)
 				{
-					// Empty Square
-					moves.push_back({
-						.curr = position,
-						.target = target_position,
-						.type = MOVETYPE_MOVE,
-					});
-				}
-				else
-				{
-					if (piece_at_target.color != piece.color)
+					Piece piece_at_target = Board::GetPieceAtPosition(target_position, board);
+
+					if (piece_at_target.type == PIECETYPE_NIL)
 					{
-						// Opponent at target square
+						// Empty Square
 						moves.push_back({
 							.curr = position,
 							.target = target_position,
-							.type = MOVETYPE_CAPTURE,
+							.type = MOVETYPE_MOVE,
 						});
 					}
-					break;
+					else
+					{
+						if (piece_at_target.color != piece.color)
+						{
+							// Opponent at target square
+							moves.push_back({
+								.curr = position,
+								.target = target_position,
+								.type = MOVETYPE_CAPTURE,
+							});
+						}
+						break;
+					}
 				}
 			}
 		}
 		return moves;
 	}
 
-	vector<Move> GetPawnMovesForSquare(const Position position, const Square board[8][8])
+	vector<Move> GetPawnMovesForSquare(Position position, Square board[8][8])
 	{
 		vector<Move> moves = {};
-		const auto	 piece = Board::GetPieceAtPosition(position, board);
+		auto		 piece = Board::GetPieceAtPosition(position, board);
 		if (piece.type != PIECETYPE_PAWN)
 			return moves;
 
-		const int unit_move = piece.color == COLOR_WHITE ? 1 : -1;
+		int unit_move = piece.color == COLOR_WHITE ? 1 : -1;
 
 		// handle regular move on to a empty square
-		const Position forward_one = {
+		Position forward_one = {
 			.rank = position.rank + unit_move,
 			.file = position.file,
 		};
@@ -84,10 +88,10 @@ namespace Moves
 			});
 
 			// since it can make one move, handle double move if at initial rank
-			const int initial_rank = piece.color == COLOR_WHITE ? 1 : 6;
+			int initial_rank = piece.color == COLOR_WHITE ? 1 : 6;
 			if (position.rank == initial_rank)
 			{
-				const Position forward_two = {
+				Position forward_two = {
 					.rank = position.rank + 2 * unit_move,
 					.file = position.file,
 				};
@@ -103,15 +107,15 @@ namespace Moves
 		}
 
 		// handle capture
-		const Position capture_positions[2] = {
+		Position capture_positions[2] = {
 			{ .rank = position.rank + unit_move, .file = position.file - 1 },
 			{ .rank = position.rank + unit_move, .file = position.file + 1 }
 		};
-		for (const Position capture_position : capture_positions)
+		for (Position capture_position : capture_positions)
 		{
 			if (!capture_position.IsValidPosition())
 				continue;
-			const Piece piece_at_target = Board::GetPieceAtPosition(capture_position, board);
+			Piece piece_at_target = Board::GetPieceAtPosition(capture_position, board);
 			if (piece_at_target.type != PIECETYPE_NIL && piece.color != piece_at_target.color)
 			{
 				moves.push_back({
@@ -125,7 +129,7 @@ namespace Moves
 		return moves;
 	}
 
-	vector<Move> GetMovesForSquare(const Position position, const Square board[8][8])
+	vector<Move> GetMovesForSquare(Position position, Square board[8][8])
 	{
 		vector<Move> pawn_moves = GetPawnMovesForSquare(position, board);
 		vector<Move> piece_moves = GetPieceMoves(position, board);
@@ -134,7 +138,7 @@ namespace Moves
 	}
 
 	vector<Move> GetRegularMoves(
-		const Color turn, const Square board[8][8])
+		Color turn, Square board[8][8])
 	{
 		vector<Move> moves = vector<Move>();
 		for (int rank = 7; rank >= 0; --rank)
@@ -146,9 +150,7 @@ namespace Moves
 				if (piece_at_position.color == turn)
 				{
 					vector<Move> moves_at_square = GetMovesForSquare(position, board);
-					// cout << GetSquareCode({rank, file}) << " " <<
-					// GetPieceCode(board[rank][file].piece)
-					//      << " " << moves_at_square.size() << "\n";
+					cout << position.GetSquareCode() << " " << piece_at_position.GetPieceCode() << " " << moves_at_square.size() << "\n";
 					moves.insert(
 						moves.end(),
 						moves_at_square.begin(),
@@ -156,10 +158,11 @@ namespace Moves
 				}
 			}
 		}
+		cout << "Regular Moves & Captures " << moves.size() << "\n";
 		return moves;
 	}
 
-	vector<Move> GetEnpassantMoves(const Position enapassant_target, const Square board[8][8])
+	vector<Move> GetEnpassantCaptures(Position enapassant_target, Square board[8][8])
 	{
 		auto moves = vector<Move>();
 		int	 capture_rank;
@@ -176,7 +179,7 @@ namespace Moves
 			{ .rank = capture_rank, .file = enapassant_target.file + 1 },
 			{ .rank = capture_rank, .file = enapassant_target.file - 1 },
 		};
-		for (const auto position : positions)
+		for (auto position : positions)
 		{
 			if (position.IsValidPosition())
 			{
@@ -188,17 +191,19 @@ namespace Moves
 						.target = enapassant_target,
 						.type = MOVETYPE_ENPASSANT,
 					});
+					cout << position.GetSquareCode() << " " << piece.GetPieceCode() << " " << 1 << "\n";
 				}
 			}
 		}
-		cout << moves.size() << "\n";
+		cout << "Enpassant Captures " << moves.size() << "\n";
 		return moves;
 	}
 
-	vector<Move> GetLegalMoves(const Color turn, const CastlingRights castling_rights, const Position enpassant_target, const Square board[8][8])
+	vector<Move> GetLegalMoves(Color turn, CastlingRights castling_rights, Position enpassant_target, Square board[8][8])
 	{
 		auto moves = GetRegularMoves(turn, board);
-		auto enpassant_moves = GetEnpassantMoves(enpassant_target, board);
+		auto enpassant_captures = GetEnpassantCaptures(enpassant_target, board);
+		moves.insert(moves.end(), enpassant_captures.begin(), enpassant_captures.end());
 		return moves;
 	}
 } // namespace Moves

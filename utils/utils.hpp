@@ -4,7 +4,7 @@
 using namespace std;
 
 template <typename T>
-vector<T> Concatenate(const vector<T>& vec1, const vector<T>& vec2)
+vector<T> Concatenate(vector<T>& vec1, vector<T>& vec2)
 {
 	vector<T> result = vec1;
 	result.insert(result.end(), vec2.begin(), vec2.end());

@@ -17,10 +17,10 @@ class Position
 	int file;
 
 	public:
-	bool IsValidPosition() const;
+	bool IsValidPosition();
 
 	public:
-	string GetSquareCode() const;
+	string GetSquareCode();
 };
 
 struct Move
@@ -30,7 +30,7 @@ struct Move
 	MoveType type;
 };
 
-const vector<Position>& GetPieceMoveSet(PieceType piece_type);
+vector<Position>& GetPieceMoveSet(PieceType piece_type);
 
 class Piece
 {
@@ -40,7 +40,7 @@ class Piece
 	char	  GetPieceCode();
 };
 
-// constexpr Piece DefaultPiece = { .type = PIECETYPE_NIL, .color = COLOR_NIL };
+// expr Piece DefaultPiece = { .type = PIECETYPE_NIL, .color = COLOR_NIL };
 
 struct Square
 {

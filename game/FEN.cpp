@@ -7,7 +7,7 @@
 using namespace std;
 namespace FEN
 {
-	const map<char, PieceType> PieceTypeMap = {
+	map<char, PieceType> PieceTypeMap = {
 		{ 'p', PIECETYPE_PAWN },
 		{ 'n', PIECETYPE_KNIGHT },
 		{ 'b', PIECETYPE_BISHOP },
@@ -16,7 +16,7 @@ namespace FEN
 		{ 'k', PIECETYPE_KING }
 	};
 
-	void SetBoard(const string& fen, Square board[8][8])
+	void SetBoard(string& fen, Square board[8][8])
 	{
 		// Clear the board
 		for (int i = 0; i < 8; ++i)
@@ -59,7 +59,7 @@ namespace FEN
 		}
 	}
 
-	Color GetCurrentTurn(const string& fen)
+	Color GetCurrentTurn(string& fen)
 	{
 		int i = 0;
 
@@ -74,7 +74,7 @@ namespace FEN
 		return COLOR_NIL;
 	}
 
-	CastlingRights GetCastlingRights(const string& fen)
+	CastlingRights GetCastlingRights(string& fen)
 	{
 		int i = 0;
 		while (fen[i] != ' ')
@@ -94,7 +94,7 @@ namespace FEN
 		return rights;
 	}
 
-	Position GetEnPassantTarget(const string& fen)
+	Position GetEnPassantTarget(string& fen)
 	{
 		int i = 0;
 		while (fen[i] != ' ')
