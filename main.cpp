@@ -6,7 +6,7 @@ int main()
 {
     Piece board[8][8];
     Board::InitializeBoard(board);
-    const string fen = "rnbqkbnr/pp1pp1pp/8/4PpP1/2p5/8/PPPP1P1P/RNBQKBNR w KQkq f6 0 4";
+    const string fen = "rnbq1rk1/pppp1ppp/4p3/2bnN2Q/4P3/3B1P2/PPPP2PP/RNB1K2R w KQ - 1 7";
     FEN::SetBoard(fen, board);
     const CastlingRights& castling_rights = FEN::GetCastlingRights(fen);
     const Color           turn = FEN::GetCurrentTurn(fen);

@@ -95,4 +95,56 @@ namespace Board
     {
         return 0.0;
     }
+
+    Position GetKingPosition(const Color turn, const Piece (&board)[8][8])
+    {
+        for (int rank = 7; rank >= 0; --rank)
+        {
+            for (int file = 0; file < 8; ++file)
+            {
+                Position position = { .rank = rank, .file = file };
+                auto     piece = GetPieceAtPosition(position, board);
+                if (piece.color == turn && piece.type == PIECETYPE_KING)
+                {
+                    return position;
+                }
+            }
+        }
+        return { -1, -1 };
+    }
+
+    bool IsKingInCheck(const Color turn, const Piece (&board)[8][8])
+    {
+        auto king_position = GetKingPosition(turn, board);
+        return IsKingInCheckAt(turn, king_position, board);
+    }
+
+    bool IsKingInCheckAt(const Color turn, const Position& king_position, const Piece (&board)[8][8])
+    {
+        for (int rank = 7; rank >= 0; --rank)
+        {
+            for (int file = 0; file < 8; ++file)
+            {
+                Position position = { .rank = rank, .file = file };
+                auto     piece = GetPieceAtPosition(position, board);
+                if (piece.type != PIECETYPE_NIL && piece.color != turn)
+                {
+                    const auto moves = Moves::GetMovesForPieceAt(position, board);
+                    for (auto move : moves)
+                    {
+                        if (move.target.rank == king_position.rank && move.target.file == king_position.file)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    bool IsPositionEmpty(const Position& position, const Piece (&board)[8][8])
+    {
+        return GetPieceAtPosition(position, board).type == PIECETYPE_NIL;
+    }
 } // namespace Board
