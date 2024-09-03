@@ -4,7 +4,7 @@
 
 using namespace std;
 
-string Position::GetSquareCode() const
+string Position::GetPieceCode() const
 {
 	string result = "..";
 	result[0] = 'a' + this->file;
@@ -41,7 +41,7 @@ vector<Position> knight_moveset = {
 };
 vector<Position>  queen_moveset = Concatenate(rook_moveset, bishop_moveset);
 vector<Position>  nil_moveset = vector<Position>();
-vector<Position>& GetPieceMoveSet(PieceType& piece_type)
+vector<Position>& GetPieceMoveDestinations(PieceType& piece_type)
 {
 
 	switch (piece_type)

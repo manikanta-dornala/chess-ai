@@ -8,7 +8,7 @@
             "name": "(lldb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/ChessAI",
+            "program": "${workspaceFolder}/ChessAI_debug",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

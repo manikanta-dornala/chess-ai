@@ -4,9 +4,9 @@
 #include <string>
 #include <map>
 #include <vector>
-#include "Board.hpp"
+#include "board.hpp"
 #include "enums.hpp"
-#include "FEN.hpp"
-#include "Moves.hpp"
+#include "fen.hpp"
+#include "moves.hpp"
 #include "structs.hpp"
 #include "utils.hpp"

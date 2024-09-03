@@ -4,7 +4,7 @@ using namespace std;
 
 namespace Moves
 {
-	vector<Move> GetPieceMoves(const Position& position, const Square (&board)[8][8])
+	vector<Move> GetPieceMoves(const Position& position, const Piece (&board)[8][8])
 	{
 		auto  moves = vector<Move>();
 		Piece piece = Board::GetPieceAtPosition(position, board);
@@ -13,16 +13,16 @@ namespace Moves
 			return moves;
 		}
 		int	 move_limit = piece.type == PIECETYPE_KING || piece.type == PIECETYPE_KNIGHT ? 1 : 8;
-		auto move_set = GetPieceMoveSet(piece.type);
+		auto move_destinations = GetPieceMoveDestinations(piece.type);
 
-		for (auto unit_move : move_set)
+		for (auto destination : move_destinations)
 		{
 			int i = 1;
 			for (i = 1; i < move_limit + 1; i++)
 			{
 				Position target_position = {
-					.rank = position.rank + (unit_move.rank * i),
-					.file = position.file + (unit_move.file * i)
+					.rank = position.rank + (destination.rank * i),
+					.file = position.file + (destination.file * i)
 				};
 
 				if (target_position.IsValidPosition())
@@ -31,7 +31,7 @@ namespace Moves
 
 					if (piece_at_target.type == PIECETYPE_NIL)
 					{
-						// Empty Square
+						// Empty Piece
 						moves.push_back({
 							.curr = position,
 							.target = target_position,
@@ -42,7 +42,7 @@ namespace Moves
 					{
 						if (piece_at_target.color != piece.color)
 						{
-							// Opponent at target square
+							// Opponent at target Piece
 							moves.push_back({
 								.curr = position,
 								.target = target_position,
@@ -57,18 +57,18 @@ namespace Moves
 		return moves;
 	}
 
-	vector<Move> GetPawnMovesForSquare(const Position& position, const Square (&board)[8][8])
+	vector<Move> GetPawnMovesForPiece(const Position& position, const Piece (&board)[8][8])
 	{
 		vector<Move> moves = {};
 		auto		 piece = Board::GetPieceAtPosition(position, board);
 		if (piece.type != PIECETYPE_PAWN)
 			return moves;
 
-		int unit_move = piece.color == COLOR_WHITE ? 1 : -1;
+		int destination = piece.color == COLOR_WHITE ? 1 : -1;
 
-		// handle regular move on to a empty square
+		// handle regular move on to a empty Piece
 		Position forward_one = {
-			.rank = position.rank + unit_move,
+			.rank = position.rank + destination,
 			.file = position.file,
 		};
 		if (forward_one.IsValidPosition() && Board::GetPieceAtPosition(forward_one, board).type == PIECETYPE_NIL)
@@ -84,7 +84,7 @@ namespace Moves
 			if (position.rank == initial_rank)
 			{
 				Position forward_two = {
-					.rank = position.rank + 2 * unit_move,
+					.rank = position.rank + 2 * destination,
 					.file = position.file,
 				};
 				if (forward_two.IsValidPosition() && Board::GetPieceAtPosition(forward_two, board).type == PIECETYPE_NIL)
@@ -100,8 +100,8 @@ namespace Moves
 
 		// handle capture
 		Position capture_positions[2] = {
-			{ .rank = position.rank + unit_move, .file = position.file - 1 },
-			{ .rank = position.rank + unit_move, .file = position.file + 1 }
+			{ .rank = position.rank + destination, .file = position.file - 1 },
+			{ .rank = position.rank + destination, .file = position.file + 1 }
 		};
 		for (Position capture_position : capture_positions)
 		{
@@ -121,15 +121,15 @@ namespace Moves
 		return moves;
 	}
 
-	vector<Move> GetMovesForSquare(const Position& position, const Square (&board)[8][8])
+	vector<Move> GetMovesForPiece(const Position& position, const Piece (&board)[8][8])
 	{
-		vector<Move> pawn_moves = GetPawnMovesForSquare(position, board);
+		vector<Move> pawn_moves = GetPawnMovesForPiece(position, board);
 		vector<Move> piece_moves = GetPieceMoves(position, board);
 		pawn_moves.insert(pawn_moves.end(), piece_moves.begin(), piece_moves.end());
 		return pawn_moves;
 	}
 
-	vector<Move> GetRegularMoves(const Color& turn, const Square (&board)[8][8])
+	vector<Move> GetRegularMoves(const Color& turn, const Piece (&board)[8][8])
 	{
 		vector<Move> moves = vector<Move>();
 		for (int rank = 7; rank >= 0; --rank)
@@ -140,12 +140,12 @@ namespace Moves
 				Piece	 piece_at_position = Board::GetPieceAtPosition(position, board);
 				if (piece_at_position.color == turn)
 				{
-					vector<Move> moves_at_square = GetMovesForSquare(position, board);
-					cout << position.GetSquareCode() << " " << piece_at_position.GetPieceCode() << " " << moves_at_square.size() << "\n";
+					vector<Move> moves_at_Piece = GetMovesForPiece(position, board);
+					cout << position.GetPieceCode() << " " << piece_at_position.GetPieceCode() << " " << moves_at_Piece.size() << "\n";
 					moves.insert(
 						moves.end(),
-						moves_at_square.begin(),
-						moves_at_square.end());
+						moves_at_Piece.begin(),
+						moves_at_Piece.end());
 				}
 			}
 		}
@@ -153,7 +153,7 @@ namespace Moves
 		return moves;
 	}
 
-	vector<Move> GetEnpassantCaptures(const Position& enapassant_target, const Square (&board)[8][8])
+	vector<Move> GetEnpassantCaptures(const Position& enapassant_target, const Piece (&board)[8][8])
 	{
 		auto moves = vector<Move>();
 		int	 capture_rank;
@@ -182,7 +182,7 @@ namespace Moves
 						.target = enapassant_target,
 						.type = MOVETYPE_ENPASSANT,
 					});
-					cout << position.GetSquareCode() << " " << piece.GetPieceCode() << " " << 1 << "\n";
+					cout << position.GetPieceCode() << " " << piece.GetPieceCode() << " " << 1 << "\n";
 				}
 			}
 		}
@@ -190,7 +190,7 @@ namespace Moves
 		return moves;
 	}
 
-	vector<Move> GetLegalMoves(const Color& turn, const CastlingRights& castling_rights, const Position& enpassant_target, const Square (&board)[8][8])
+	vector<Move> GetLegalMoves(const Color& turn, const CastlingRights& castling_rights, const Position& enpassant_target, const Piece (&board)[8][8])
 	{
 		auto moves = GetRegularMoves(turn, board);
 		auto enpassant_captures = GetEnpassantCaptures(enpassant_target, board);

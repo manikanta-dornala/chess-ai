@@ -11,15 +11,15 @@ namespace FEN
 		{ 'k', PIECETYPE_KING }
 	};
 
-	void SetBoard(const string& fen, Square (&board)[8][8])
+	void SetBoard(const string& fen, Piece (&board)[8][8])
 	{
 		// Clear the board
 		for (int i = 0; i < 8; ++i)
 		{
 			for (int j = 0; j < 8; ++j)
 			{
-				board[i][j].piece.type = PIECETYPE_NIL;
-				board[i][j].piece.color = COLOR_NIL;
+				board[i][j].type = PIECETYPE_NIL;
+				board[i][j].color = COLOR_NIL;
 			}
 		}
 
@@ -38,8 +38,8 @@ namespace FEN
 			}
 			else if (isdigit(c))
 			{
-				// if we see a number start counting empty squares
-				// the number here is number of empty squares
+				// if we see a number start counting empty Pieces
+				// the number here is number of empty Pieces
 				// we can move that many files forward
 				file += c - '0';
 			}
@@ -47,7 +47,7 @@ namespace FEN
 			{
 				Color	  color = isupper(c) ? COLOR_WHITE : COLOR_BLACK;
 				PieceType pieceType = PieceTypeMap.at(tolower(c));
-				board[rank][file].piece = { pieceType, color };
+				board[rank][file] = { pieceType, color };
 				file++;
 			}
 			i++;

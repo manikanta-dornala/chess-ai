@@ -22,7 +22,7 @@ class Position
 	bool IsValidPosition() const;
 
 	public:
-	string GetSquareCode() const;
+	string GetPieceCode() const;
 };
 
 struct Move
@@ -32,7 +32,7 @@ struct Move
 	MoveType type;
 };
 
-vector<Position>& GetPieceMoveSet(PieceType& piece_type);
+vector<Position>& GetPieceMoveDestinations(PieceType& piece_type);
 
 class Piece
 {
@@ -43,8 +43,3 @@ class Piece
 };
 
 // expr Piece DefaultPiece = { .type = PIECETYPE_NIL, .color = COLOR_NIL };
-
-struct Square
-{
-	Piece piece;
-};

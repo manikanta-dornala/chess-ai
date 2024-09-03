@@ -5,7 +5,7 @@
             "label": "build with make",
             "type": "shell",
             "command": "make",
-            "args": [],
+            "args": ["debug"],
             "group": "build",
             "problemMatcher": [
                 "$gcc"
