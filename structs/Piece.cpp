@@ -1,13 +1,14 @@
-#pragma once
-#include "../structs/structs.hpp"
+
 #include "../enums/enums.hpp"
-#include <map>
+#include <iostream>
+#include <string>
+#include "structs.hpp"
 using namespace std;
 
-char GetPieceCode(Piece piece)
+char Piece::GetPieceCode()
 {
 	char code = ' ';
-	switch (piece.type)
+	switch (this->type)
 	{
 		case PIECETYPE_PAWN:
 			code = 'p';
@@ -31,5 +32,5 @@ char GetPieceCode(Piece piece)
 			code = '.';
 			break;
 	}
-	return piece.color == COLOR_WHITE ? toupper(code) : tolower(code);
+	return this->color == COLOR_WHITE ? toupper(code) : tolower(code);
 }

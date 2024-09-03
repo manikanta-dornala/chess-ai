@@ -1,4 +1,4 @@
-#pragma once
+
 enum Color
 {
 	COLOR_NIL = 0,

@@ -2,7 +2,7 @@ StatementMacros: ['UPROPERTY', 'UFUNCTION', 'UCLASS', 'USTRUCT', 'UENUM', 'UINTE
 Language: Cpp
 BasedOnStyle: LLVM
 
-AccessModifierOffset: -4
+AccessModifierOffset: 0
 AlignAfterOpenBracket: DontAlign
 AlignConsecutiveDeclarations: true
 AlignEscapedNewlines: Left

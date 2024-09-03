@@ -16,12 +16,15 @@ all: $(TARGET)
 
 # Rule to build the target executable from object files
 $(TARGET): $(OBJECTS)
+	@echo "Linking $@ with $^"
 	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJECTS)
 
 # Rule to compile each source file into an object file
 %.o: %.cpp
+	@echo "Compiling $<"
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # Clean up build files
 clean:
+	@echo "Cleaning up..."
 	rm -f $(OBJECTS) $(TARGET)
