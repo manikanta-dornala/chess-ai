@@ -16,7 +16,7 @@ namespace FEN
 		{ 'k', PIECETYPE_KING }
 	};
 
-	void SetBoard(const string& fen, Square board[8][8])
+	void SetBoard(const string& fen, Square (&board)[8][8])
 	{
 		// Clear the board
 		for (int i = 0; i < 8; ++i)

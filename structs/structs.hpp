@@ -30,7 +30,7 @@ struct Move
 	MoveType type;
 };
 
-vector<Position>& GetPieceMoveSet(PieceType piece_type);
+vector<Position>& GetPieceMoveSet(PieceType& piece_type);
 
 class Piece
 {
