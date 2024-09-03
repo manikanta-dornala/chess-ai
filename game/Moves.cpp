@@ -19,10 +19,7 @@ namespace Moves
 		}
 		int	 move_limit = piece.type == PIECETYPE_KING || piece.type == PIECETYPE_KNIGHT ? 1 : 8;
 		auto move_set = GetPieceMoveSet(piece.type);
-		if (piece.type == PIECETYPE_BISHOP)
-		{
-			2 + 2;
-		}
+
 		for (auto unit_move : move_set)
 		{
 			int i = 1;
