@@ -3,15 +3,15 @@ using namespace std;
 namespace FEN
 {
     map<char, PieceType> PieceTypeMap = {
-        { 'p', PIECETYPE_PAWN },
-        { 'n', PIECETYPE_KNIGHT },
-        { 'b', PIECETYPE_BISHOP },
-        { 'r', PIECETYPE_ROOK },
-        { 'q', PIECETYPE_QUEEN },
-        { 'k', PIECETYPE_KING }
+        {'p', PIECETYPE_PAWN  },
+        {'n', PIECETYPE_KNIGHT},
+        {'b', PIECETYPE_BISHOP},
+        {'r', PIECETYPE_ROOK  },
+        {'q', PIECETYPE_QUEEN },
+        {'k', PIECETYPE_KING  }
     };
 
-    void SetBoard(const string& fen, BoardArray& board)
+    void SetBoard(const string &fen, BoardArray &board)
     {
         // Clear the board
         for (int i = 0; i < 8; ++i)
@@ -35,26 +35,24 @@ namespace FEN
                 // when there's a / a new rank starts
                 rank--;
                 file = 0;
-            }
-            else if (isdigit(c))
+            } else if (isdigit(c))
             {
                 // if we see a number start counting empty Pieces
                 // the number here is number of empty Pieces
                 // we can move that many files forward
                 file += c - '0';
-            }
-            else
+            } else
             {
-                Color     color = isupper(c) ? COLOR_WHITE : COLOR_BLACK;
+                Color color = isupper(c) ? COLOR_WHITE : COLOR_BLACK;
                 PieceType pieceType = PieceTypeMap.at(tolower(c));
-                board[rank][file] = { pieceType, color };
+                board[rank][file] = {pieceType, color};
                 file++;
             }
             i++;
         }
     }
 
-    Color GetCurrentTurn(const string& fen)
+    Color GetCurrentTurn(const string &fen)
     {
         int i = 0;
 
@@ -69,7 +67,7 @@ namespace FEN
         return COLOR_NIL;
     }
 
-    CastlingRights GetCastlingRights(const string& fen)
+    CastlingRights GetCastlingRights(const string &fen)
     {
         int i = 0;
         while (fen[i] != ' ')
@@ -89,7 +87,7 @@ namespace FEN
         return rights;
     }
 
-    Position GetEnPassantTarget(const string& fen)
+    Position GetEnPassantTarget(const string &fen)
     {
         int i = 0;
         while (fen[i] != ' ')
@@ -109,10 +107,10 @@ namespace FEN
         i++;
         if (fen[i] == '-')
         {
-            return { -1, -1 };
+            return {-1, -1};
         }
         int file = fen[i] - 'a';
         int rank = fen[i + 1] - '1';
-        return { file, rank };
+        return {file, rank};
     }
 } // namespace FEN

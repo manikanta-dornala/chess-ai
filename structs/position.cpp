@@ -14,39 +14,38 @@ string Position::GetPositionCode() const
 
 bool Position::IsValidPosition() const
 {
-    return this->rank >= 0 && this->rank <= 7 && this->file >= 0 && this->file <= 7;
+    return this->rank >= 0 && this->rank <= 7 && this->file >= 0
+           && this->file <= 7;
 }
 // Define vectors of MoveSet for each piece type
 vector<Position> rook_moveset = {
-    { .rank = 0, .file = 1 },
-    { .rank = 0, .file = -1 },
-    { .rank = 1, .file = 0 },
-    { .rank = -1, .file = 0 }
+    {.rank = 0,  .file = 1 },
+    {.rank = 0,  .file = -1},
+    {.rank = 1,  .file = 0 },
+    {.rank = -1, .file = 0 }
 };
 vector<Position> bishop_moveset = {
-    { .rank = 1, .file = 1 },
-    { .rank = 1, .file = -1 },
-    { .rank = -1, .file = 1 },
-    { .rank = -1, .file = -1 }
+    {.rank = 1,  .file = 1 },
+    {.rank = 1,  .file = -1},
+    {.rank = -1, .file = 1 },
+    {.rank = -1, .file = -1}
 };
 vector<Position> knight_moveset = {
-    { .rank = 2, .file = 1 },
-    { .rank = 2, .file = -1 },
-    { .rank = -2, .file = 1 },
-    { .rank = -2, .file = -1 },
-    { .rank = 1, .file = 2 },
-    { .rank = 1, .file = -2 },
-    { .rank = -1, .file = 2 },
-    { .rank = -1, .file = -2 }
+    {.rank = 2,  .file = 1 },
+    {.rank = 2,  .file = -1},
+    {.rank = -2, .file = 1 },
+    {.rank = -2, .file = -1},
+    {.rank = 1,  .file = 2 },
+    {.rank = 1,  .file = -2},
+    {.rank = -1, .file = 2 },
+    {.rank = -1, .file = -2}
 };
-vector<Position>  queen_moveset = Concatenate(rook_moveset, bishop_moveset);
-vector<Position>  nil_moveset = vector<Position>();
-vector<Position>& GetPieceMoveDestinations(PieceType& piece_type)
+vector<Position> queen_moveset = Concatenate(rook_moveset, bishop_moveset);
+vector<Position> nil_moveset = vector<Position>();
+vector<Position> &GetPieceMoveDestinations(PieceType &piece_type)
 {
-
     switch (piece_type)
     {
-
         case PIECETYPE_ROOK:
             return rook_moveset;
         case PIECETYPE_BISHOP:

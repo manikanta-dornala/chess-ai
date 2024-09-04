@@ -12,27 +12,22 @@ struct CastlingRights
 
 class Position
 {
-    public:
+  public:
     int rank;
-
-    public:
     int file;
 
-    public:
     bool IsValidPosition() const;
-
-    public:
     string GetPositionCode() const;
 };
 
-vector<Position>& GetPieceMoveDestinations(PieceType& piece_type);
+vector<Position> &GetPieceMoveDestinations(PieceType &piece_type);
 
 class Piece
 {
-    public:
+  public:
     PieceType type;
-    Color     color;
-    char      GetPieceCode() const;
+    Color color;
+    char GetPieceCode() const;
 };
 
 using BoardArray = std::array<std::array<Piece, 8>, 8>;
@@ -41,9 +36,9 @@ struct Move
 {
     Position curr;
     Position target;
-    Piece    Piece;
+    Piece Piece;
     MoveType type;
-    string   getPGN();
+    string getPGN();
 };
 
 // expr Piece DefaultPiece = { .type = PIECETYPE_NIL, .color = COLOR_NIL };

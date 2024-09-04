@@ -5,10 +5,11 @@ using namespace std;
 namespace Moves
 {
 
-    vector<Move> GetPawnMovesForPieceAt(const Position& position, const BoardArray& board)
+    vector<Move> GetPawnMovesForPieceAt(const Position &position,
+                                        const BoardArray &board)
     {
         vector<Move> moves;
-        auto         piece = Board::GetPieceAtPosition(position, board);
+        auto piece = Board::GetPieceAtPosition(position, board);
         if (piece.type != PIECETYPE_PAWN)
             return moves;
 
@@ -19,7 +20,9 @@ namespace Moves
             .rank = position.rank + destination,
             .file = position.file,
         };
-        if (forward_one.IsValidPosition() && Board::GetPieceAtPosition(forward_one, board).type == PIECETYPE_NIL)
+        if (forward_one.IsValidPosition()
+            && Board::GetPieceAtPosition(forward_one, board).type
+                   == PIECETYPE_NIL)
         {
             moves.push_back({
                 .curr = position,
@@ -27,7 +30,8 @@ namespace Moves
                 .type = MOVETYPE_MOVE,
             });
 
-            // since it can make one move, handle double move if at initial rank
+            // since it can make one move, handle double move if
+            // at initial rank
             int initial_rank = piece.color == COLOR_WHITE ? 1 : 6;
             if (position.rank == initial_rank)
             {
@@ -35,7 +39,9 @@ namespace Moves
                     .rank = position.rank + 2 * destination,
                     .file = position.file,
                 };
-                if (forward_two.IsValidPosition() && Board::GetPieceAtPosition(forward_two, board).type == PIECETYPE_NIL)
+                if (forward_two.IsValidPosition()
+                    && Board::GetPieceAtPosition(forward_two, board).type
+                           == PIECETYPE_NIL)
                 {
                     moves.push_back({
                         .curr = position,
@@ -48,15 +54,17 @@ namespace Moves
 
         // handle capture
         Position capture_positions[2] = {
-            { .rank = position.rank + destination, .file = position.file - 1 },
-            { .rank = position.rank + destination, .file = position.file + 1 }
+            {.rank = position.rank + destination, .file = position.file - 1},
+            {.rank = position.rank + destination, .file = position.file + 1}
         };
         for (Position capture_position : capture_positions)
         {
             if (!capture_position.IsValidPosition())
                 continue;
-            Piece piece_at_target = Board::GetPieceAtPosition(capture_position, board);
-            if (piece_at_target.type != PIECETYPE_NIL && piece.color != piece_at_target.color)
+            Piece piece_at_target =
+                Board::GetPieceAtPosition(capture_position, board);
+            if (piece_at_target.type != PIECETYPE_NIL
+                && piece.color != piece_at_target.color)
             {
                 moves.push_back({
                     .curr = position,
@@ -69,10 +77,10 @@ namespace Moves
         return moves;
     }
 
-    vector<Move> GetMovesForPieceAt(const Position& position, const BoardArray& board)
+    vector<Move> GetMovesForPieceAt(const Position &position,
+                                    const BoardArray &board)
     {
-
-        auto         moves = vector<Move>();
+        auto moves = vector<Move>();
         vector<Move> pawn_moves = GetPawnMovesForPieceAt(position, board);
         moves.insert(moves.begin(), pawn_moves.begin(), pawn_moves.end());
 
@@ -81,7 +89,9 @@ namespace Moves
         {
             return moves;
         }
-        int  move_limit = piece.type == PIECETYPE_KING || piece.type == PIECETYPE_KNIGHT ? 1 : 8;
+        int move_limit =
+            piece.type == PIECETYPE_KING || piece.type == PIECETYPE_KNIGHT ? 1
+                                                                           : 8;
         auto move_destinations = GetPieceMoveDestinations(piece.type);
 
         for (auto destination : move_destinations)
@@ -91,12 +101,12 @@ namespace Moves
             {
                 Position target_position = {
                     .rank = position.rank + (destination.rank * i),
-                    .file = position.file + (destination.file * i)
-                };
+                    .file = position.file + (destination.file * i)};
 
                 if (target_position.IsValidPosition())
                 {
-                    Piece piece_at_target = Board::GetPieceAtPosition(target_position, board);
+                    Piece piece_at_target =
+                        Board::GetPieceAtPosition(target_position, board);
 
                     if (piece_at_target.type == PIECETYPE_NIL)
                     {
@@ -106,8 +116,7 @@ namespace Moves
                             .target = target_position,
                             .type = MOVETYPE_MOVE,
                         });
-                    }
-                    else
+                    } else
                     {
                         if (piece_at_target.color != piece.color)
                         {
@@ -126,23 +135,26 @@ namespace Moves
         return moves;
     }
 
-    vector<Move> GetRegularMoves(const Color& turn, const BoardArray& board)
+    vector<Move> GetRegularMoves(const Color &turn, const BoardArray &board)
     {
         vector<Move> moves = vector<Move>();
         for (int rank = 7; rank >= 0; --rank)
         {
             for (int file = 0; file < 8; ++file)
             {
-                Position position = { .rank = rank, .file = file };
-                Piece    piece_at_position = Board::GetPieceAtPosition(position, board);
+                Position position = {.rank = rank, .file = file};
+                Piece piece_at_position =
+                    Board::GetPieceAtPosition(position, board);
                 if (piece_at_position.color == turn)
                 {
-                    vector<Move> moves_at_Piece = GetMovesForPieceAt(position, board);
-                    cout << position.GetPositionCode() << " " << piece_at_position.GetPieceCode() << " " << moves_at_Piece.size() << "\n";
-                    moves.insert(
-                        moves.end(),
-                        moves_at_Piece.begin(),
-                        moves_at_Piece.end());
+                    vector<Move> moves_at_Piece =
+                        GetMovesForPieceAt(position, board);
+                    cout << position.GetPositionCode() << " "
+                         << piece_at_position.GetPieceCode() << " "
+                         << moves_at_Piece.size() << "\n";
+                    moves.insert(moves.end(),
+                                 moves_at_Piece.begin(),
+                                 moves_at_Piece.end());
                 }
             }
         }
@@ -150,10 +162,11 @@ namespace Moves
         return moves;
     }
 
-    vector<Move> GetEnpassantCaptures(const Position& enapassant_target, const BoardArray& board)
+    vector<Move> GetEnpassantCaptures(const Position &enapassant_target,
+                                      const BoardArray &board)
     {
         auto moves = vector<Move>();
-        int  capture_rank;
+        int capture_rank;
         if (enapassant_target.rank == 5)
             capture_rank = 4;
         else if (enapassant_target.rank == 2)
@@ -161,25 +174,28 @@ namespace Moves
         else
             return moves;
 
-        auto capture_piece = Board::GetPieceAtPosition({ .rank = capture_rank, .file = enapassant_target.file }, board);
+        auto capture_piece = Board::GetPieceAtPosition(
+            {.rank = capture_rank, .file = enapassant_target.file}, board);
 
         Position positions[2] = {
-            { .rank = capture_rank, .file = enapassant_target.file + 1 },
-            { .rank = capture_rank, .file = enapassant_target.file - 1 },
+            {.rank = capture_rank, .file = enapassant_target.file + 1},
+            {.rank = capture_rank, .file = enapassant_target.file - 1},
         };
         for (auto position : positions)
         {
             if (position.IsValidPosition())
             {
                 Piece piece = Board::GetPieceAtPosition(position, board);
-                if (piece.color != capture_piece.color && piece.type != PIECETYPE_NIL)
+                if (piece.color != capture_piece.color
+                    && piece.type != PIECETYPE_NIL)
                 {
                     moves.push_back({
                         .curr = position,
                         .target = enapassant_target,
                         .type = MOVETYPE_ENPASSANT,
                     });
-                    cout << position.GetPositionCode() << " " << piece.GetPieceCode() << " " << 1 << "\n";
+                    cout << position.GetPositionCode() << " "
+                         << piece.GetPieceCode() << " " << 1 << "\n";
                 }
             }
         }
@@ -187,12 +203,16 @@ namespace Moves
         return moves;
     }
 
-    vector<Move> GetLegalMoves(const Color& turn, const CastlingRights& castling_rights, const Position& enpassant_target, const BoardArray& board)
+    vector<Move> GetLegalMoves(const Color &turn,
+                               const CastlingRights &castling_rights,
+                               const Position &enpassant_target,
+                               const BoardArray &board)
     {
         auto moves = GetRegularMoves(turn, board);
 
         auto enpassant_captures = GetEnpassantCaptures(enpassant_target, board);
-        moves.insert(moves.end(), enpassant_captures.begin(), enpassant_captures.end());
+        moves.insert(
+            moves.end(), enpassant_captures.begin(), enpassant_captures.end());
 
         auto castling_moves = GetCastlingMoves(turn, castling_rights, board);
         moves.insert(moves.end(), castling_moves.begin(), castling_moves.end());
@@ -203,7 +223,9 @@ namespace Moves
         return validMoves;
     }
 
-    vector<Move> FilterMovesThatLandKingInCheck(vector<Move> moves, const Color turn, const BoardArray& board)
+    vector<Move> FilterMovesThatLandKingInCheck(vector<Move> moves,
+                                                const Color turn,
+                                                const BoardArray &board)
     {
         vector<Move> validMoves;
         for (auto move : moves)
@@ -212,25 +234,35 @@ namespace Moves
             if (!Board::IsKingInCheck(turn, new_board))
             {
                 validMoves.push_back(move);
-                cout << move.curr.GetPositionCode() << " " << move.target.GetPositionCode() << " " << Board::getSimpleValueForBoard(turn, new_board) << "\n";
-            }
-            else
+                cout << move.curr.GetPositionCode() << " "
+                     << move.target.GetPositionCode() << " "
+                     << Board::getSimpleValueForBoard(turn, new_board) << "\n";
+            } else
             {
-                cout << move.curr.GetPositionCode() << " " << move.target.GetPositionCode() << " " << Board::getSimpleValueForBoard(turn, new_board) << "\n";
+                cout << move.curr.GetPositionCode() << " "
+                     << move.target.GetPositionCode() << " "
+                     << Board::getSimpleValueForBoard(turn, new_board) << "\n";
             }
         }
         return validMoves;
     }
 
-    vector<Move> GetCastlingMoves(const Color& turn, const CastlingRights& castling_rights, const BoardArray& board)
+    vector<Move> GetCastlingMoves(const Color &turn,
+                                  const CastlingRights &castling_rights,
+                                  const BoardArray &board)
     {
         vector<Move> moves;
-        int          king_file = 4;
-        int          rank = turn == COLOR_WHITE ? 0 : 7;
-        bool         king_side_allowed = turn == COLOR_WHITE ? castling_rights.white_king_side : castling_rights.black_king_side;
-        bool         queen_side_allowed = turn == COLOR_WHITE ? castling_rights.white_queen_side : castling_rights.black_queen_side;
+        int king_file = 4;
+        int rank = turn == COLOR_WHITE ? 0 : 7;
+        bool king_side_allowed = turn == COLOR_WHITE
+                                     ? castling_rights.white_king_side
+                                     : castling_rights.black_king_side;
+        bool queen_side_allowed = turn == COLOR_WHITE
+                                      ? castling_rights.white_queen_side
+                                      : castling_rights.black_queen_side;
 
-        if (Board::IsKingInCheckAt(turn, { .rank = rank, .file = king_file }, board))
+        if (Board::IsKingInCheckAt(
+                turn, {.rank = rank, .file = king_file}, board))
             return moves;
 
         int king_target_file = -1;
@@ -242,16 +274,20 @@ namespace Moves
         {
             king_target_file = 6;
             passover_file = 5;
-            isEmpty = Board::IsPositionEmpty({ .rank = rank, .file = 5 }, board)
-                && Board::IsPositionEmpty({ .rank = rank, .file = 6 }, board);
+            isEmpty =
+                Board::IsPositionEmpty({.rank = rank, .file = 5}, board)
+                && Board::IsPositionEmpty({.rank = rank, .file = 6}, board);
             if (isEmpty)
             {
-                kingWillBeInCheckPassingOver = Board::IsKingInCheckAt(turn, { .rank = rank, .file = passover_file }, board);
+                kingWillBeInCheckPassingOver = Board::IsKingInCheckAt(
+                    turn, {.rank = rank, .file = passover_file}, board);
                 if (!kingWillBeInCheckPassingOver)
                 {
-                    moves.push_back({ .curr = { .rank = rank, .file = king_file },
-                        .target = { .rank = rank, .file = king_target_file },
-                        .type = MOVETYPE_CASTLING });
+                    moves.push_back({
+                        .curr = {.rank = rank, .file = king_file       },
+                        .target = {.rank = rank, .file = king_target_file},
+                        .type = MOVETYPE_CASTLING
+                    });
                 }
             }
         }
@@ -259,17 +295,21 @@ namespace Moves
         {
             king_target_file = 2;
             passover_file = 3;
-            isEmpty = Board::IsPositionEmpty({ .rank = rank, .file = 1 }, board)
-                && Board::IsPositionEmpty({ .rank = rank, .file = 2 }, board)
-                && Board::IsPositionEmpty({ .rank = rank, .file = 3 }, board);
+            isEmpty =
+                Board::IsPositionEmpty({.rank = rank, .file = 1}, board)
+                && Board::IsPositionEmpty({.rank = rank, .file = 2}, board)
+                && Board::IsPositionEmpty({.rank = rank, .file = 3}, board);
             if (isEmpty)
             {
-                kingWillBeInCheckPassingOver = Board::IsKingInCheckAt(turn, { .rank = rank, .file = passover_file }, board);
+                kingWillBeInCheckPassingOver = Board::IsKingInCheckAt(
+                    turn, {.rank = rank, .file = passover_file}, board);
                 if (!kingWillBeInCheckPassingOver)
                 {
-                    moves.push_back({ .curr = { .rank = rank, .file = king_file },
-                        .target = { .rank = rank, .file = king_target_file },
-                        .type = MOVETYPE_CASTLING });
+                    moves.push_back({
+                        .curr = {.rank = rank, .file = king_file       },
+                        .target = {.rank = rank, .file = king_target_file},
+                        .type = MOVETYPE_CASTLING
+                    });
                 }
             }
         }
