@@ -1,4 +1,4 @@
-#include "../headers/chessai.hpp"
+#include "../chessai.hpp"
 
 using namespace std;
 
@@ -149,16 +149,16 @@ namespace Moves
                 {
                     vector<Move> moves_at_Piece =
                         GetMovesForPieceAt(position, board);
-                    cout << position.GetPositionCode() << " "
-                         << piece_at_position.GetPieceCode() << " "
-                         << moves_at_Piece.size() << "\n";
+                    // cout << position.GetPositionCode() << " "
+                    //      << piece_at_position.GetPieceCode() << " "
+                    //      << moves_at_Piece.size() << "\n";
                     moves.insert(moves.end(),
                                  moves_at_Piece.begin(),
                                  moves_at_Piece.end());
                 }
             }
         }
-        cout << "Regular Moves & Captures " << moves.size() << "\n";
+        // cout << "Regular Moves & Captures " << moves.size() << "\n";
         return moves;
     }
 
@@ -194,8 +194,8 @@ namespace Moves
                         .target = enapassant_target,
                         .type = MOVETYPE_ENPASSANT,
                     });
-                    cout << position.GetPositionCode() << " "
-                         << piece.GetPieceCode() << " " << 1 << "\n";
+                    // cout << position.GetPositionCode() << " "
+                    //      << piece.GetPieceCode() << " " << 1 << "\n";
                 }
             }
         }
@@ -234,14 +234,14 @@ namespace Moves
             if (!Board::IsKingInCheck(turn, new_board))
             {
                 validMoves.push_back(move);
-                cout << move.curr.GetPositionCode() << " "
-                     << move.target.GetPositionCode() << " "
-                     << Board::getSimpleValueForBoard(turn, new_board) << "\n";
+                // cout << move.curr.GetPositionCode() << " "
+                //      << move.target.GetPositionCode() << " "
+                //      << Board::getSimpleValueForBoard(new_board) << "\n";
             } else
             {
-                cout << move.curr.GetPositionCode() << " "
-                     << move.target.GetPositionCode() << " "
-                     << Board::getSimpleValueForBoard(turn, new_board) << "\n";
+                // cout << move.curr.GetPositionCode() << " "
+                //      << move.target.GetPositionCode() << " "
+                //      << Board::getSimpleValueForBoard(new_board) << "\n";
             }
         }
         return validMoves;
@@ -313,7 +313,8 @@ namespace Moves
                 }
             }
         }
-        cout << "Castling Moves " << moves.size() << "\n";
+        // cout << "Castling Moves " << moves.size() << "\n";
         return moves;
     }
+
 } // namespace Moves

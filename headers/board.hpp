@@ -25,5 +25,6 @@ namespace Board
     BoardArray
     NewBoardAfterMove(Move move, Color turn, const BoardArray &board);
 
-    int getSimpleValueForBoard(const Color &turn, const BoardArray &board);
+    int getSimpleValueForBoard(const BoardArray &board);
+    int EvaluateMove(Move move, Color turn, BoardArray board);
 } // namespace Board

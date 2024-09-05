@@ -1,6 +1,6 @@
 
 
-#include "../headers/chessai.hpp"
+#include "../chessai.hpp"
 
 using namespace std;
 

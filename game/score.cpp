@@ -1,4 +1,4 @@
-#include "../headers/chessai.hpp"
+#include "../chessai.hpp"
 
 namespace Board
 {
@@ -10,13 +10,10 @@ namespace Board
         {PIECETYPE_BISHOP, 3},
         {PIECETYPE_ROOK,   5},
         {PIECETYPE_QUEEN,  9},
-        {PIECETYPE_KING,   9},
+        {PIECETYPE_KING,   0},
     };
 
-    const int CurrKingInCheck = -9999999;
-    const int OpponentKingInCheck = 25;
-
-    int getSimpleValueForBoard(const Color &turn, const BoardArray &board)
+    int getSimpleValueForBoard(const BoardArray &board)
     {
         int score = 0;
         for (int i = 0; i < 8; i++)
@@ -24,18 +21,22 @@ namespace Board
             for (int j = 0; j < 8; j++)
             {
                 const Piece piece = board[i][j];
-                const int sign = piece.color == turn ? 1 : -1;
+                const int sign = piece.color == COLOR_WHITE ? 1 : -1;
+                // if (IsKingInCheckAt(piece.color, {.rank = i, .file = j},
+                // board))
+                // {
+                //     return -sign * 1024;
+                // }
                 score += sign * PieceValues.at(piece.type);
-                if (piece.type == PIECETYPE_KING)
-                {
-                    if (IsKingInCheckAt(turn, {.rank = i, .file = j}, board))
-                    {
-                        score += piece.color == turn ? CurrKingInCheck
-                                                     : OpponentKingInCheck;
-                    }
-                }
             }
         }
         return score;
+    }
+
+    int EvaluateMove(Move move, Color turn, BoardArray board)
+    {
+        const BoardArray new_board =
+            Board::NewBoardAfterMove(move, turn, board);
+        return Board::getSimpleValueForBoard(new_board);
     }
 } // namespace Board
