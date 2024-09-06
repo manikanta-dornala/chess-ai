@@ -13,6 +13,10 @@ namespace Moves
     vector<Move> GetRegularMoves(const Color &turn, const BoardArray &board);
     vector<Move> GetEnpassantCaptures(const Position &enapassant_target,
                                       const BoardArray &board);
+    vector<Move> GetAllMoves(const Color &turn,
+                             const CastlingRights &castling_rights,
+                             const Position &enpassant_target,
+                             const BoardArray &board);
     vector<Move> GetLegalMoves(const Color &turn,
                                const CastlingRights &castling_rights,
                                const Position &enpassant_target,

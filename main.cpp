@@ -14,9 +14,13 @@ int eval_move(Move move, Color turn, BoardArray &board)
     return eval;
 }
 
-Move bestMove(const Color turn, const BoardArray &board)
+Move bestMove(const Color &turn,
+              const CastlingRights &castling_rights,
+              const Position &enpassant_target,
+              const BoardArray &board)
 {
-    auto moves = Moves::GetRegularMoves(turn, board);
+    auto moves =
+        Moves::GetAllMoves(turn, castling_rights, enpassant_target, board);
     moves = Moves::FilterMovesThatLandKingInCheck(moves, turn, board);
     if (moves.size() == 0)
     {
@@ -62,9 +66,9 @@ int main()
     // Moves::GetLegalMoves(turn, castling_rights, enpassant_target, board);
     cout << "------\n";
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 3; i++)
     {
-        auto move = bestMove(turn, board);
+        auto move = bestMove(turn, castling_rights, enpassant_target, board);
         if (move.curr.rank == -1)
         {
             cout << "checkmate" << endl;

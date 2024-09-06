@@ -203,6 +203,23 @@ namespace Moves
         return moves;
     }
 
+    vector<Move> GetAllMoves(const Color &turn,
+                             const CastlingRights &castling_rights,
+                             const Position &enpassant_target,
+                             const BoardArray &board)
+    {
+        auto moves = GetRegularMoves(turn, board);
+
+        auto enpassant_captures = GetEnpassantCaptures(enpassant_target, board);
+        moves.insert(
+            moves.end(), enpassant_captures.begin(), enpassant_captures.end());
+
+        auto castling_moves = GetCastlingMoves(turn, castling_rights, board);
+        moves.insert(moves.end(), castling_moves.begin(), castling_moves.end());
+
+        return moves;
+    }
+
     vector<Move> GetLegalMoves(const Color &turn,
                                const CastlingRights &castling_rights,
                                const Position &enpassant_target,
