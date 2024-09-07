@@ -12,4 +12,6 @@ namespace FEN
     CastlingRights GetCastlingRights(const string &fen);
     Position GetEnPassantTarget(const string &fen);
 
+    BoardState GetBoardState(const string &fen);
+
 } // namespace FEN

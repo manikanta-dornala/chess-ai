@@ -81,6 +81,7 @@ Thumbs.db
 *.exe
 *.out
 *.app
+.cache/
 
 ChessAI
 ChessAI_debug

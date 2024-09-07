@@ -6,7 +6,7 @@
 #include "structs.hpp"
 using namespace std;
 
-namespace Moves
+namespace Board
 {
     vector<Move> GetMovesForPieceAt(const Position &position,
                                     const BoardArray &board);
@@ -25,6 +25,7 @@ namespace Moves
                                   const CastlingRights &castling_rights,
                                   const BoardArray &board);
     vector<Move> FilterMovesThatLandKingInCheck(vector<Move> moves,
-                                                const Color turn,
-                                                const BoardArray &board);
-} // namespace Moves
+                                                const BoardState &state);
+
+    Move GetBestMove(const BoardState &state);
+} // namespace Board

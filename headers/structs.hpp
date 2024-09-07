@@ -41,4 +41,12 @@ struct Move
     string getPGN();
 };
 
+struct BoardState
+{
+    BoardArray board;
+    CastlingRights castling_rights;
+    Position enpassant_target;
+    Color turn;
+};
+
 // expr Piece DefaultPiece = { .type = PIECETYPE_NIL, .color = COLOR_NIL };

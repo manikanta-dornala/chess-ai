@@ -9,9 +9,5 @@ using namespace std;
 
 namespace AI
 {
-    int minmax(const BoardArray &board,
-               const Color &turn,
-               const int depth,
-               int alpha,
-               int beta);
+    int minmax(const BoardState &state, const int depth, int alpha, int beta);
 }

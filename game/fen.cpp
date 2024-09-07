@@ -113,4 +113,17 @@ namespace FEN
         int rank = fen[i + 1] - '1';
         return {file, rank};
     }
+
+    BoardState GetBoardState(const string &fen)
+    {
+        BoardArray board;
+        SetBoard(fen, board);
+        CastlingRights castling_rights = GetCastlingRights(fen);
+        Color turn = GetCurrentTurn(fen);
+        Position enpassant_target = GetEnPassantTarget(fen);
+        return {.board = board,
+                .turn = turn,
+                .castling_rights = castling_rights,
+                .enpassant_target = enpassant_target};
+    }
 } // namespace FEN

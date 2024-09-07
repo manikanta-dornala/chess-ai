@@ -2,40 +2,35 @@
 
 namespace AI
 {
-    int minmax(const BoardArray &board,
-               const Color &turn,
-               const int depth,
-               int alpha,
-               int beta)
+    int minmax(const BoardState &state, const int depth, int alpha, int beta)
     {
         if (depth == 0)
         {
-            return Board::getSimpleValueForBoard(board);
+            return Board::getSimpleValueForBoard(state.board);
         }
 
-        vector<Move> moves = Moves::GetRegularMoves(turn, board);
-        moves = Moves::FilterMovesThatLandKingInCheck(moves, turn, board);
+        vector<Move> moves = Board::GetRegularMoves(state.turn, state.board);
+        moves = Board::FilterMovesThatLandKingInCheck(moves, state);
 
-        if (Board::IsKingInCheck(turn, board) && moves.size() == 0)
+        if (Board::IsKingInCheck(state.turn, state.board) && moves.size() == 0)
         {
             // Checkmate
-            return turn == COLOR_WHITE ? -9999 : 9999;
+            return state.turn == COLOR_WHITE ? -9999 : 9999;
         }
         vector<int> evals;
         for (auto move : moves)
         {
-            evals.push_back(Board::EvaluateMove(move, turn, board));
+            evals.push_back(Board::EvaluateMoveWithScoreLookup(move, state));
         }
         sort_by_order(moves, evals, false);
-        if (turn == COLOR_WHITE)
+        if (state.turn == COLOR_WHITE)
         {
             int max_eval = -1024;
             for (const Move move : moves)
             {
-                const BoardArray new_board =
-                    Board::NewBoardAfterMove(move, COLOR_WHITE, board);
-                int eval =
-                    minmax(new_board, COLOR_BLACK, depth - 1, alpha, beta);
+                const BoardState new_state =
+                    Board::NewBoardAfterMove(move, state);
+                int eval = minmax(new_state, depth - 1, alpha, beta);
 
                 max_eval = max(eval, max_eval);
                 alpha = max(alpha, eval);
@@ -46,15 +41,14 @@ namespace AI
             }
             return max_eval;
         }
-        if (turn == COLOR_BLACK)
+        if (state.turn == COLOR_BLACK)
         {
             int min_eval = 1024;
             for (const Move move : moves)
             {
-                const BoardArray new_board =
-                    Board::NewBoardAfterMove(move, COLOR_BLACK, board);
-                int eval =
-                    minmax(new_board, COLOR_WHITE, depth - 1, alpha, beta);
+                const BoardState new_state =
+                    Board::NewBoardAfterMove(move, state);
+                int eval = minmax(new_state, depth - 1, alpha, beta);
                 min_eval = min(eval, min_eval);
                 beta = min(beta, eval);
                 if (beta <= alpha)

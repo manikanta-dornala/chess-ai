@@ -33,10 +33,17 @@ namespace Board
         return score;
     }
 
-    int EvaluateMove(Move move, Color turn, BoardArray board)
+    int EvaluateMoveWithScoreLookup(Move move, const BoardState &state)
     {
-        const BoardArray new_board =
-            Board::NewBoardAfterMove(move, turn, board);
-        return Board::getSimpleValueForBoard(new_board);
+        const auto new_state = Board::NewBoardAfterMove(move, state);
+        return Board::getSimpleValueForBoard(new_state.board);
+    }
+
+    int EvaluateMoveWithMinMax(Move move, const BoardState &state)
+    {
+        const int alpha = state.turn == COLOR_WHITE ? pow(2, 15) : -pow(2, 15);
+        const auto new_state = Board::NewBoardAfterMove(move, state);
+        int eval = AI::minmax(new_state, 3, alpha, -alpha);
+        return eval;
     }
 } // namespace Board

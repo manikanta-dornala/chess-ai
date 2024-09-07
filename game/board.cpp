@@ -17,37 +17,37 @@ namespace Board
 
         for (int col = 0; col < 8; ++col)
         {
-            board[1][col] = {.type = PIECETYPE_PAWN, .color = COLOR_WHITE};
-            board[6][col] = {.type = PIECETYPE_PAWN, .color = COLOR_BLACK};
+            board[RANK_2][col] = {.type = PIECETYPE_PAWN, .color = COLOR_WHITE};
+            board[RANK_7][col] = {.type = PIECETYPE_PAWN, .color = COLOR_BLACK};
         }
 
-        board[0][0] = {.type = PIECETYPE_ROOK, .color = COLOR_WHITE};
-        board[0][7] = {.type = PIECETYPE_ROOK, .color = COLOR_WHITE};
-        board[0][1] = {.type = PIECETYPE_KNIGHT, .color = COLOR_WHITE};
-        board[0][6] = {.type = PIECETYPE_KNIGHT, .color = COLOR_WHITE};
-        board[0][2] = {.type = PIECETYPE_BISHOP, .color = COLOR_WHITE};
-        board[0][5] = {.type = PIECETYPE_BISHOP, .color = COLOR_WHITE};
-        board[0][3] = {.type = PIECETYPE_QUEEN, .color = COLOR_WHITE};
-        board[0][4] = {.type = PIECETYPE_KING, .color = COLOR_WHITE};
+        board[RANK_1][FILE_a] = {PIECETYPE_ROOK, COLOR_WHITE};
+        board[RANK_1][FILE_b] = {PIECETYPE_KNIGHT, COLOR_WHITE};
+        board[RANK_1][FILE_c] = {PIECETYPE_BISHOP, COLOR_WHITE};
+        board[RANK_1][FILE_d] = {PIECETYPE_QUEEN, COLOR_WHITE};
+        board[RANK_1][FILE_e] = {PIECETYPE_KING, COLOR_WHITE};
+        board[RANK_1][FILE_f] = {PIECETYPE_BISHOP, COLOR_WHITE};
+        board[RANK_1][FILE_g] = {PIECETYPE_KNIGHT, COLOR_WHITE};
+        board[RANK_1][FILE_h] = {PIECETYPE_ROOK, COLOR_WHITE};
 
-        board[7][0] = {.type = PIECETYPE_ROOK, .color = COLOR_BLACK};
-        board[7][7] = {.type = PIECETYPE_ROOK, .color = COLOR_BLACK};
-        board[7][1] = {.type = PIECETYPE_KNIGHT, .color = COLOR_BLACK};
-        board[7][6] = {.type = PIECETYPE_KNIGHT, .color = COLOR_BLACK};
-        board[7][2] = {.type = PIECETYPE_BISHOP, .color = COLOR_BLACK};
-        board[7][5] = {.type = PIECETYPE_BISHOP, .color = COLOR_BLACK};
-        board[7][3] = {.type = PIECETYPE_QUEEN, .color = COLOR_BLACK};
-        board[7][4] = {.type = PIECETYPE_KING, .color = COLOR_BLACK};
+        board[RANK_8][FILE_a] = {PIECETYPE_ROOK, COLOR_BLACK};
+        board[RANK_8][FILE_b] = {PIECETYPE_KNIGHT, COLOR_BLACK};
+        board[RANK_8][FILE_c] = {PIECETYPE_BISHOP, COLOR_BLACK};
+        board[RANK_8][FILE_d] = {PIECETYPE_QUEEN, COLOR_BLACK};
+        board[RANK_8][FILE_e] = {PIECETYPE_KING, COLOR_BLACK};
+        board[RANK_8][FILE_f] = {PIECETYPE_BISHOP, COLOR_BLACK};
+        board[RANK_8][FILE_g] = {PIECETYPE_KNIGHT, COLOR_BLACK};
+        board[RANK_8][FILE_h] = {PIECETYPE_ROOK, COLOR_BLACK};
     }
 
     void copyBoard(const BoardArray &original, BoardArray &newBoard)
     {
-        for (int i = 0; i < 8; i++)
+        for (int rank = 0; rank < 8; rank++)
         {
-            for (int j = 0; j < 8; j++)
+            for (int file = 0; file < 8; file++)
             {
-                Piece curr = original[i][j];
-                newBoard[i][j] = {curr.type, curr.color};
+                Piece curr = original[rank][file];
+                newBoard[rank][file] = {curr.type, curr.color};
             }
         }
     }
@@ -55,11 +55,11 @@ namespace Board
     int numPiecesOnBoard(const BoardArray &board)
     {
         int numPieces = 0;
-        for (int i = 0; i < 8; i++)
+        for (int rank = 0; rank < 8; rank++)
         {
-            for (int j = 0; j < 8; j++)
+            for (int file = 0; file < 8; file++)
             {
-                if (board[i][j].type != PIECETYPE_NIL)
+                if (board[rank][file].type != PIECETYPE_NIL)
                 {
                     numPieces++;
                 }
@@ -129,7 +129,7 @@ namespace Board
                 if (piece.type != PIECETYPE_NIL && piece.color != turn)
                 {
                     const auto moves =
-                        Moves::GetMovesForPieceAt(position, board);
+                        Board::GetMovesForPieceAt(position, board);
                     for (auto move : moves)
                     {
                         if (move.target.rank == king_position.rank
@@ -149,10 +149,10 @@ namespace Board
         return GetPieceAtPosition(position, board).type == PIECETYPE_NIL;
     }
 
-    BoardArray NewBoardAfterMove(Move move, Color turn, const BoardArray &board)
+    BoardState NewBoardAfterMove(const Move &move, const BoardState &state)
     {
         BoardArray boardCopy;
-        Board::copyBoard(board, boardCopy);
+        Board::copyBoard(state.board, boardCopy);
         auto piece = Board::GetPieceAtPosition(move.curr, boardCopy);
         const Piece nil_piece = {PIECETYPE_NIL, COLOR_NIL};
         switch (move.type)
@@ -167,7 +167,7 @@ namespace Board
                 boardCopy[move.target.rank][move.target.file] = piece;
                 boardCopy[move.curr.rank][move.curr.file] = nil_piece;
                 Position enpassant_capture = {
-                    .rank = piece.color == COLOR_WHITE ? 4 : 3,
+                    .rank = piece.color == COLOR_WHITE ? RANK_5 : RANK_4,
                     .file = move.target.file};
                 boardCopy[enpassant_capture.rank][enpassant_capture.file] =
                     nil_piece;
@@ -177,10 +177,10 @@ namespace Board
                 boardCopy[move.curr.rank][move.curr.file] = nil_piece;
                 Position rook_curr_position = {
                     .rank = move.target.rank,
-                    .file = move.target.file == 2 ? 0 : 7};
+                    .file = move.target.file == FILE_c ? FILE_a : FILE_h};
                 Position rook_final_position = {
                     .rank = move.target.rank,
-                    .file = move.target.file == 2 ? 3 : 5};
+                    .file = move.target.file == FILE_c ? FILE_d : FILE_f};
                 boardCopy[rook_final_position.rank][rook_final_position.file] =
                     {.type = PIECETYPE_ROOK, .color = piece.color};
                 boardCopy[rook_curr_position.rank][rook_curr_position.file] =
@@ -190,7 +190,10 @@ namespace Board
             default:
                 break;
         }
-        return boardCopy;
+        return {.board = boardCopy,
+                .turn = state.turn == COLOR_WHITE ? COLOR_BLACK : COLOR_WHITE,
+                .castling_rights = state.castling_rights,
+                .enpassant_target = state.enpassant_target};
     }
 
 } // namespace Board

@@ -2,7 +2,7 @@
 
 using namespace std;
 
-namespace Moves
+namespace Board
 {
 
     vector<Move> GetPawnMovesForPieceAt(const Position &position,
@@ -149,16 +149,12 @@ namespace Moves
                 {
                     vector<Move> moves_at_Piece =
                         GetMovesForPieceAt(position, board);
-                    // cout << position.GetPositionCode() << " "
-                    //      << piece_at_position.GetPieceCode() << " "
-                    //      << moves_at_Piece.size() << "\n";
                     moves.insert(moves.end(),
                                  moves_at_Piece.begin(),
                                  moves_at_Piece.end());
                 }
             }
         }
-        // cout << "Regular Moves & Captures " << moves.size() << "\n";
         return moves;
     }
 
@@ -220,35 +216,33 @@ namespace Moves
         return moves;
     }
 
-    vector<Move> GetLegalMoves(const Color &turn,
-                               const CastlingRights &castling_rights,
-                               const Position &enpassant_target,
-                               const BoardArray &board)
+    vector<Move> GetLegalMoves(const BoardState &state)
     {
-        auto moves = GetRegularMoves(turn, board);
+        auto moves = GetRegularMoves(state.turn, state.board);
 
-        auto enpassant_captures = GetEnpassantCaptures(enpassant_target, board);
+        auto enpassant_captures =
+            GetEnpassantCaptures(state.enpassant_target, state.board);
         moves.insert(
             moves.end(), enpassant_captures.begin(), enpassant_captures.end());
 
-        auto castling_moves = GetCastlingMoves(turn, castling_rights, board);
+        auto castling_moves =
+            GetCastlingMoves(state.turn, state.castling_rights, state.board);
         moves.insert(moves.end(), castling_moves.begin(), castling_moves.end());
 
-        auto validMoves = FilterMovesThatLandKingInCheck(moves, turn, board);
+        auto validMoves = FilterMovesThatLandKingInCheck(moves, state);
         cout << "Total Moves " << moves.size() << "\n";
         cout << "Legal Moves " << validMoves.size() << "\n";
         return validMoves;
     }
 
     vector<Move> FilterMovesThatLandKingInCheck(vector<Move> moves,
-                                                const Color turn,
-                                                const BoardArray &board)
+                                                const BoardState &state)
     {
         vector<Move> validMoves;
         for (auto move : moves)
         {
-            BoardArray new_board = Board::NewBoardAfterMove(move, turn, board);
-            if (!Board::IsKingInCheck(turn, new_board))
+            BoardState new_state = Board::NewBoardAfterMove(move, state);
+            if (!Board::IsKingInCheck(state.turn, new_state.board))
             {
                 validMoves.push_back(move);
                 // cout << move.curr.GetPositionCode() << " "
@@ -334,4 +328,29 @@ namespace Moves
         return moves;
     }
 
-} // namespace Moves
+    Move GetBestMove(const BoardState &state)
+    {
+        auto moves = Board::GetAllMoves(state.turn,
+                                        state.castling_rights,
+                                        state.enpassant_target,
+                                        state.board);
+        moves = Board::FilterMovesThatLandKingInCheck(moves, state);
+        if (moves.size() == 0)
+        {
+            return {
+                .curr = {.rank = -1, .file = -1}
+            };
+        }
+        vector<int> evals;
+        for (const auto move : moves)
+        {
+            int eval = EvaluateMoveWithMinMax(move, state);
+            evals.push_back(eval);
+        }
+        sort_by_order(moves, evals, false);
+
+        const Move best = moves[0];
+        return best;
+    }
+
+} // namespace Board
