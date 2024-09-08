@@ -68,8 +68,8 @@ namespace Board
         return numPieces;
     }
 
-    const Piece &GetPieceAtPosition(const Position &position,
-                                    const BoardArray &board)
+    const Piece GetPieceAtPosition(const Position position,
+                                   const BoardArray &board)
     {
         if (position.IsValidPosition())
         {
@@ -117,7 +117,7 @@ namespace Board
     }
 
     bool IsKingInCheckAt(const Color turn,
-                         const Position &king_position,
+                         const Position king_position,
                          const BoardArray &board)
     {
         for (int rank = 7; rank >= 0; --rank)
@@ -144,12 +144,12 @@ namespace Board
         return false;
     }
 
-    bool IsPositionEmpty(const Position &position, const BoardArray &board)
+    bool IsPositionEmpty(const Position position, const BoardArray &board)
     {
         return GetPieceAtPosition(position, board).type == PIECETYPE_NIL;
     }
 
-    BoardState NewBoardAfterMove(const Move &move, const BoardState &state)
+    BoardState NewBoardAfterMove(const Move move, const BoardState &state)
     {
         BoardArray boardCopy;
         Board::copyBoard(state.board, boardCopy);
@@ -185,7 +185,6 @@ namespace Board
                     {.type = PIECETYPE_ROOK, .color = piece.color};
                 boardCopy[rook_curr_position.rank][rook_curr_position.file] =
                     nil_piece;
-                // king_position = move.target;
             }
             default:
                 break;

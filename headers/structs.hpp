@@ -41,6 +41,8 @@ struct Move
     string getPGN();
 };
 
+using Moves = vector<Move>;
+
 struct BoardState
 {
     BoardArray board;

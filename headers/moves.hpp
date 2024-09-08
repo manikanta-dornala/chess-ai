@@ -8,24 +8,16 @@ using namespace std;
 
 namespace Board
 {
-    vector<Move> GetMovesForPieceAt(const Position &position,
-                                    const BoardArray &board);
-    vector<Move> GetRegularMoves(const Color &turn, const BoardArray &board);
-    vector<Move> GetEnpassantCaptures(const Position &enapassant_target,
-                                      const BoardArray &board);
-    vector<Move> GetAllMoves(const Color &turn,
-                             const CastlingRights &castling_rights,
-                             const Position &enpassant_target,
-                             const BoardArray &board);
-    vector<Move> GetLegalMoves(const Color &turn,
-                               const CastlingRights &castling_rights,
-                               const Position &enpassant_target,
+    Moves GetMovesForPieceAt(const Position position, const BoardArray &board);
+    Moves GetRegularMoves(const Color turn, const BoardArray &board);
+    Moves GetEnpassantCaptures(const Position enpassant_target,
                                const BoardArray &board);
-    vector<Move> GetCastlingMoves(const Color &turn,
-                                  const CastlingRights &castling_rights,
-                                  const BoardArray &board);
-    vector<Move> FilterMovesThatLandKingInCheck(vector<Move> moves,
-                                                const BoardState &state);
+    Moves GetAllMoves(const BoardState &state);
+    Moves GetLegalMoves(const BoardState &state);
+    Moves GetCastlingMoves(const Color turn,
+                           const CastlingRights castling_rights,
+                           const BoardArray &board);
+    Moves FilterMovesThatLandKingInCheck(Moves &moves, const BoardState &state);
 
     Move GetBestMove(const BoardState &state);
 } // namespace Board

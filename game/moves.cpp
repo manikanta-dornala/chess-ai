@@ -5,10 +5,10 @@ using namespace std;
 namespace Board
 {
 
-    vector<Move> GetPawnMovesForPieceAt(const Position &position,
-                                        const BoardArray &board)
+    Moves GetPawnMovesForPieceAt(const Position position,
+                                 const BoardArray &board)
     {
-        vector<Move> moves;
+        Moves moves;
         auto piece = Board::GetPieceAtPosition(position, board);
         if (piece.type != PIECETYPE_PAWN)
             return moves;
@@ -77,11 +77,10 @@ namespace Board
         return moves;
     }
 
-    vector<Move> GetMovesForPieceAt(const Position &position,
-                                    const BoardArray &board)
+    Moves GetMovesForPieceAt(const Position position, const BoardArray &board)
     {
-        auto moves = vector<Move>();
-        vector<Move> pawn_moves = GetPawnMovesForPieceAt(position, board);
+        auto moves = Moves();
+        Moves pawn_moves = GetPawnMovesForPieceAt(position, board);
         moves.insert(moves.begin(), pawn_moves.begin(), pawn_moves.end());
 
         Piece piece = Board::GetPieceAtPosition(position, board);
@@ -135,9 +134,9 @@ namespace Board
         return moves;
     }
 
-    vector<Move> GetRegularMoves(const Color &turn, const BoardArray &board)
+    Moves GetRegularMoves(const Color turn, const BoardArray &board)
     {
-        vector<Move> moves = vector<Move>();
+        Moves moves;
         for (int rank = 7; rank >= 0; --rank)
         {
             for (int file = 0; file < 8; ++file)
@@ -147,8 +146,7 @@ namespace Board
                     Board::GetPieceAtPosition(position, board);
                 if (piece_at_position.color == turn)
                 {
-                    vector<Move> moves_at_Piece =
-                        GetMovesForPieceAt(position, board);
+                    Moves moves_at_Piece = GetMovesForPieceAt(position, board);
                     moves.insert(moves.end(),
                                  moves_at_Piece.begin(),
                                  moves_at_Piece.end());
@@ -158,24 +156,24 @@ namespace Board
         return moves;
     }
 
-    vector<Move> GetEnpassantCaptures(const Position &enapassant_target,
-                                      const BoardArray &board)
+    Moves GetEnpassantCaptures(const Position enpassant_target,
+                               const BoardArray &board)
     {
-        auto moves = vector<Move>();
+        auto moves = Moves();
         int capture_rank;
-        if (enapassant_target.rank == 5)
-            capture_rank = 4;
-        else if (enapassant_target.rank == 2)
-            capture_rank = 3;
+        if (enpassant_target.rank == 5)
+            capture_rank = (short)4;
+        else if (enpassant_target.rank == 2)
+            capture_rank = (short)3;
         else
             return moves;
 
         auto capture_piece = Board::GetPieceAtPosition(
-            {.rank = capture_rank, .file = enapassant_target.file}, board);
+            {.rank = capture_rank, .file = enpassant_target.file}, board);
 
         Position positions[2] = {
-            {.rank = capture_rank, .file = enapassant_target.file + 1},
-            {.rank = capture_rank, .file = enapassant_target.file - 1},
+            {.rank = capture_rank, .file = enpassant_target.file + 1},
+            {.rank = capture_rank, .file = enpassant_target.file - 1},
         };
         for (auto position : positions)
         {
@@ -187,7 +185,7 @@ namespace Board
                 {
                     moves.push_back({
                         .curr = position,
-                        .target = enapassant_target,
+                        .target = enpassant_target,
                         .type = MOVETYPE_ENPASSANT,
                     });
                     // cout << position.GetPositionCode() << " "
@@ -199,24 +197,23 @@ namespace Board
         return moves;
     }
 
-    vector<Move> GetAllMoves(const Color &turn,
-                             const CastlingRights &castling_rights,
-                             const Position &enpassant_target,
-                             const BoardArray &board)
+    Moves GetAllMoves(const BoardState &state)
     {
-        auto moves = GetRegularMoves(turn, board);
+        auto moves = GetRegularMoves(state.turn, state.board);
 
-        auto enpassant_captures = GetEnpassantCaptures(enpassant_target, board);
+        auto enpassant_captures =
+            GetEnpassantCaptures(state.enpassant_target, state.board);
         moves.insert(
             moves.end(), enpassant_captures.begin(), enpassant_captures.end());
 
-        auto castling_moves = GetCastlingMoves(turn, castling_rights, board);
+        auto castling_moves =
+            GetCastlingMoves(state.turn, state.castling_rights, state.board);
         moves.insert(moves.end(), castling_moves.begin(), castling_moves.end());
 
         return moves;
     }
 
-    vector<Move> GetLegalMoves(const BoardState &state)
+    Moves GetLegalMoves(const BoardState &state)
     {
         auto moves = GetRegularMoves(state.turn, state.board);
 
@@ -235,10 +232,9 @@ namespace Board
         return validMoves;
     }
 
-    vector<Move> FilterMovesThatLandKingInCheck(vector<Move> moves,
-                                                const BoardState &state)
+    Moves FilterMovesThatLandKingInCheck(Moves &moves, const BoardState &state)
     {
-        vector<Move> validMoves;
+        Moves validMoves;
         for (auto move : moves)
         {
             BoardState new_state = Board::NewBoardAfterMove(move, state);
@@ -258,11 +254,11 @@ namespace Board
         return validMoves;
     }
 
-    vector<Move> GetCastlingMoves(const Color &turn,
-                                  const CastlingRights &castling_rights,
-                                  const BoardArray &board)
+    Moves GetCastlingMoves(const Color turn,
+                           const CastlingRights castling_rights,
+                           const BoardArray &board)
     {
-        vector<Move> moves;
+        Moves moves;
         int king_file = 4;
         int rank = turn == COLOR_WHITE ? 0 : 7;
         bool king_side_allowed = turn == COLOR_WHITE
@@ -330,10 +326,7 @@ namespace Board
 
     Move GetBestMove(const BoardState &state)
     {
-        auto moves = Board::GetAllMoves(state.turn,
-                                        state.castling_rights,
-                                        state.enpassant_target,
-                                        state.board);
+        auto moves = Board::GetAllMoves(state);
         moves = Board::FilterMovesThatLandKingInCheck(moves, state);
         if (moves.size() == 0)
         {

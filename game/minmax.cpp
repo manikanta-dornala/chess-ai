@@ -9,7 +9,7 @@ namespace AI
             return Board::getSimpleValueForBoard(state.board);
         }
 
-        vector<Move> moves = Board::GetRegularMoves(state.turn, state.board);
+        Moves moves = Board::GetRegularMoves(state.turn, state.board);
         moves = Board::FilterMovesThatLandKingInCheck(moves, state);
 
         if (Board::IsKingInCheck(state.turn, state.board) && moves.size() == 0)
@@ -17,12 +17,14 @@ namespace AI
             // Checkmate
             return state.turn == COLOR_WHITE ? -9999 : 9999;
         }
+
         vector<int> evals;
         for (auto move : moves)
         {
             evals.push_back(Board::EvaluateMoveWithScoreLookup(move, state));
         }
         sort_by_order(moves, evals, false);
+
         if (state.turn == COLOR_WHITE)
         {
             int max_eval = -1024;

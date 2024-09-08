@@ -111,7 +111,7 @@ namespace FEN
         }
         int file = fen[i] - 'a';
         int rank = fen[i + 1] - '1';
-        return {file, rank};
+        return {(short)file, (short)rank};
     }
 
     BoardState GetBoardState(const string &fen)

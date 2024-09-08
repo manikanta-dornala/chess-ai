@@ -22,11 +22,6 @@ namespace Board
             {
                 const Piece piece = board[i][j];
                 const int sign = piece.color == COLOR_WHITE ? 1 : -1;
-                // if (IsKingInCheckAt(piece.color, {.rank = i, .file = j},
-                // board))
-                // {
-                //     return -sign * 1024;
-                // }
                 score += sign * PieceValues.at(piece.type);
             }
         }
