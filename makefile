@@ -38,6 +38,7 @@ debug: $(DEBUG_TARGET)
 
 # Rule to build the WebAssembly target
 wasm: $(WASM_TARGET)
+wasm_react: $(WASM_TARGET_REACT)
 
 # Rule to build the production executable from object files
 $(PROD_TARGET): $(PROD_OBJECTS)
@@ -51,6 +52,11 @@ $(DEBUG_TARGET): $(DEBUG_OBJECTS)
 
 # Rule to build the WebAssembly output
 $(WASM_TARGET): $(WASM_OBJECTS)
+	@echo "Linking (WASM) $@ with $^"
+	$(WASM) $(WASM_FLAGS) -o $@ $(WASM_OBJECTS)
+
+# Rule to build the WebAssembly output
+$(WASM_TARGET_REACT): $(WASM_OBJECTS)
 	@echo "Linking (WASM) $@ with $^"
 	$(WASM) $(WASM_FLAGS) -o $@ $(WASM_OBJECTS)
 
