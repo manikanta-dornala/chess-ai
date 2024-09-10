@@ -32,13 +32,14 @@ class Piece
 
 using BoardArray = std::array<std::array<Piece, 8>, 8>;
 
-struct Move
+class Move
 {
+  public:
     Position curr;
     Position target;
     Piece piece;
     MoveType type;
-    string getPGN();
+    string GetChars();
 };
 
 using Moves = vector<Move>;
