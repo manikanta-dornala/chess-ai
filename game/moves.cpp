@@ -24,11 +24,10 @@ namespace Board
             && Board::GetPieceAtPosition(forward_one, board).type
                    == PIECETYPE_NIL)
         {
-            moves.push_back({
-                .curr = position,
-                .target = forward_one,
-                .type = MOVETYPE_MOVE,
-            });
+            moves.push_back({.curr = position,
+                             .target = forward_one,
+                             .type = MOVETYPE_MOVE,
+                             .piece = piece});
 
             // since it can make one move, handle double move if
             // at initial rank
@@ -43,11 +42,10 @@ namespace Board
                     && Board::GetPieceAtPosition(forward_two, board).type
                            == PIECETYPE_NIL)
                 {
-                    moves.push_back({
-                        .curr = position,
-                        .target = forward_two,
-                        .type = MOVETYPE_MOVE,
-                    });
+                    moves.push_back({.curr = position,
+                                     .target = forward_two,
+                                     .type = MOVETYPE_MOVE,
+                                     .piece = piece});
                 }
             }
         }
@@ -66,11 +64,10 @@ namespace Board
             if (piece_at_target.type != PIECETYPE_NIL
                 && piece.color != piece_at_target.color)
             {
-                moves.push_back({
-                    .curr = position,
-                    .target = capture_position,
-                    .type = MOVETYPE_CAPTURE,
-                });
+                moves.push_back({.curr = position,
+                                 .target = capture_position,
+                                 .type = MOVETYPE_CAPTURE,
+                                 .piece = piece});
             }
         }
 
@@ -110,21 +107,19 @@ namespace Board
                     if (piece_at_target.type == PIECETYPE_NIL)
                     {
                         // Empty Piece
-                        moves.push_back({
-                            .curr = position,
-                            .target = target_position,
-                            .type = MOVETYPE_MOVE,
-                        });
+                        moves.push_back({.curr = position,
+                                         .target = target_position,
+                                         .type = MOVETYPE_MOVE,
+                                         .piece = piece});
                     } else
                     {
                         if (piece_at_target.color != piece.color)
                         {
                             // Opponent at target Piece
-                            moves.push_back({
-                                .curr = position,
-                                .target = target_position,
-                                .type = MOVETYPE_CAPTURE,
-                            });
+                            moves.push_back({.curr = position,
+                                             .target = target_position,
+                                             .type = MOVETYPE_CAPTURE,
+                                             .piece = piece});
                         }
                         break;
                     }
@@ -183,11 +178,10 @@ namespace Board
                 if (piece.color != capture_piece.color
                     && piece.type != PIECETYPE_NIL)
                 {
-                    moves.push_back({
-                        .curr = position,
-                        .target = enpassant_target,
-                        .type = MOVETYPE_ENPASSANT,
-                    });
+                    moves.push_back({.curr = position,
+                                     .target = enpassant_target,
+                                     .type = MOVETYPE_ENPASSANT,
+                                     .piece = piece});
                     // cout << position.GetPositionCode() << " "
                     //      << piece.GetPieceCode() << " " << 1 << "\n";
                 }
@@ -277,6 +271,8 @@ namespace Board
 
         bool isEmpty;
         bool kingWillBeInCheckPassingOver;
+        Piece king_piece =
+            GetPieceAtPosition({.rank = rank, .file = king_file}, board);
         if (king_side_allowed)
         {
             king_target_file = 6;
@@ -293,7 +289,8 @@ namespace Board
                     moves.push_back({
                         .curr = {.rank = rank, .file = king_file       },
                         .target = {.rank = rank, .file = king_target_file},
-                        .type = MOVETYPE_CASTLING
+                        .type = MOVETYPE_CASTLING,
+                        .piece = king_piece
                     });
                 }
             }
@@ -315,7 +312,8 @@ namespace Board
                     moves.push_back({
                         .curr = {.rank = rank, .file = king_file       },
                         .target = {.rank = rank, .file = king_target_file},
-                        .type = MOVETYPE_CASTLING
+                        .type = MOVETYPE_CASTLING,
+                        .piece = king_piece
                     });
                 }
             }
@@ -331,7 +329,8 @@ namespace Board
         if (moves.size() == 0)
         {
             return {
-                .curr = {.rank = -1, .file = -1}
+                .curr = {.rank = -1,            .file = -1        },
+                .piece = {.type = PIECETYPE_NIL, .color = COLOR_NIL}
             };
         }
         vector<int> evals;

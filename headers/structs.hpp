@@ -36,7 +36,7 @@ struct Move
 {
     Position curr;
     Position target;
-    Piece Piece;
+    Piece piece;
     MoveType type;
     string getPGN();
 };
