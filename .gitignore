@@ -84,4 +84,7 @@ Thumbs.db
 .cache/
 
 ChessAI
+ChessAI.html
+ChessAI.wasm
+ChessAI.js
 ChessAI_debug

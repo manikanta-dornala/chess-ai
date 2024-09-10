@@ -10,9 +10,9 @@ struct CastlingRights
     bool black_queen_side;
 };
 
-class Position
+struct Position
 {
-  public:
+
     int rank;
     int file;
 
@@ -22,9 +22,8 @@ class Position
 
 vector<Position> &GetPieceMoveDestinations(PieceType &piece_type);
 
-class Piece
+struct Piece
 {
-  public:
     PieceType type;
     Color color;
     char GetPieceCode() const;
@@ -32,9 +31,9 @@ class Piece
 
 using BoardArray = std::array<std::array<Piece, 8>, 8>;
 
-class Move
+struct Move
 {
-  public:
+    // public:
     Position curr;
     Position target;
     Piece piece;
