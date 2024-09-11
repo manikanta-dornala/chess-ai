@@ -22,11 +22,13 @@ namespace Board
                          const Position king_position,
                          const BoardArray &board);
     Position GetKingPosition(const Color turn, const BoardArray &board);
-    BoardState NewBoardAfterMove(Move move, const BoardState &state);
+    BoardState NewBoardAfterMove(Move move, const BoardState state);
 
     int getSimpleValueForBoard(const BoardArray &board);
-    int EvaluateMoveWithScoreLookup(Move move, const BoardState &state);
-    int EvaluateMoveWithMinMax(Move move, const BoardState &state);
+    int EvaluateMoveWithSimpleScoreLookup(Move move, const BoardState state);
+    int EvaluateMoveWithSomeHeuristics(Move move, const BoardState state);
+    MinMaxEval
+    EvaluateMoveWithMinMax(Move move, const BoardState state, int depth);
     constexpr int RANK_1 = 0;
     constexpr int RANK_2 = 1;
     constexpr int RANK_3 = 2;

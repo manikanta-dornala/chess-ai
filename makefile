@@ -4,7 +4,7 @@ WASM = em++
 CXXFLAGS = -Wall -std=c++17
 DEBUG_FLAGS = -g -fsanitize=address  # Debug-specific flags
 PROD_FLAGS = -O2                    # Production-specific flags
-WASM_FLAGS = -O3 -s WASM=1 -s ALLOW_MEMORY_GROWTH=1  -s EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' --std=c++17 --bind 
+WASM_FLAGS = -O3 -s WASM=1   -s EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' --std=c++1z --bind 
 
 # Find all .cpp files recursively in the current directory and subdirectories
 SOURCES = $(shell find . -name "*.cpp")

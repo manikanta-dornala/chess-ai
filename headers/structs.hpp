@@ -37,6 +37,7 @@ struct Move
     Position curr;
     Position target;
     Piece piece;
+    Piece captured_piece;
     MoveType type;
     string GetChars();
 };
@@ -52,3 +53,9 @@ struct BoardState
 };
 
 // expr Piece DefaultPiece = { .type = PIECETYPE_NIL, .color = COLOR_NIL };
+
+struct MinMaxEval
+{
+    int value;
+    int num_moves_evaluated;
+};

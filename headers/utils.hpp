@@ -3,6 +3,9 @@
 #include <vector>
 using namespace std;
 
+// constexpr int INT_MAX = 2147483647;
+// constexpr int INT_MIN = -2147483647;
+
 template <typename T> vector<T> Concatenate(vector<T> &vec1, vector<T> &vec2)
 {
     vector<T> result = vec1;

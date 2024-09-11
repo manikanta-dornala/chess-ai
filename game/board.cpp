@@ -149,7 +149,7 @@ namespace Board
         return GetPieceAtPosition(position, board).type == PIECETYPE_NIL;
     }
 
-    BoardState NewBoardAfterMove(const Move move, const BoardState &state)
+    BoardState NewBoardAfterMove(const Move move, const BoardState state)
     {
         BoardArray boardCopy;
         Board::copyBoard(state.board, boardCopy);

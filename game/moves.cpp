@@ -14,6 +14,7 @@ namespace Board
             return moves;
 
         int destination = piece.color == COLOR_WHITE ? 1 : -1;
+        Piece captured_piece = {.type = PIECETYPE_NIL, .color = COLOR_NIL};
 
         // handle regular move on to a empty Piece
         Position forward_one = {
@@ -24,10 +25,11 @@ namespace Board
             && Board::GetPieceAtPosition(forward_one, board).type
                    == PIECETYPE_NIL)
         {
-            moves.push_back({.curr = position,
-                             .target = forward_one,
+            moves.push_back({.target = forward_one,
                              .type = MOVETYPE_MOVE,
-                             .piece = piece});
+                             .piece = piece,
+                             .captured_piece = captured_piece,
+                             .curr = position});
 
             // since it can make one move, handle double move if
             // at initial rank
@@ -45,7 +47,8 @@ namespace Board
                     moves.push_back({.curr = position,
                                      .target = forward_two,
                                      .type = MOVETYPE_MOVE,
-                                     .piece = piece});
+                                     .piece = piece,
+                                     .captured_piece = captured_piece});
                 }
             }
         }
@@ -67,7 +70,8 @@ namespace Board
                 moves.push_back({.curr = position,
                                  .target = capture_position,
                                  .type = MOVETYPE_CAPTURE,
-                                 .piece = piece});
+                                 .piece = piece,
+                                 .captured_piece = piece_at_target});
             }
         }
 
@@ -79,7 +83,6 @@ namespace Board
         auto moves = Moves();
         Moves pawn_moves = GetPawnMovesForPieceAt(position, board);
         moves.insert(moves.begin(), pawn_moves.begin(), pawn_moves.end());
-
         Piece piece = Board::GetPieceAtPosition(position, board);
         if (piece.type == PIECETYPE_NIL || piece.type == PIECETYPE_PAWN)
         {
@@ -110,16 +113,19 @@ namespace Board
                         moves.push_back({.curr = position,
                                          .target = target_position,
                                          .type = MOVETYPE_MOVE,
-                                         .piece = piece});
+                                         .piece = piece,
+                                         .captured_piece = piece_at_target});
                     } else
                     {
                         if (piece_at_target.color != piece.color)
                         {
                             // Opponent at target Piece
-                            moves.push_back({.curr = position,
-                                             .target = target_position,
-                                             .type = MOVETYPE_CAPTURE,
-                                             .piece = piece});
+                            moves.push_back(
+                                {.curr = position,
+                                 .target = target_position,
+                                 .type = MOVETYPE_CAPTURE,
+                                 .piece = piece,
+                                 .captured_piece = piece_at_target});
                         }
                         break;
                     }
@@ -163,7 +169,7 @@ namespace Board
         else
             return moves;
 
-        auto capture_piece = Board::GetPieceAtPosition(
+        auto captured_piece = Board::GetPieceAtPosition(
             {.rank = capture_rank, .file = enpassant_target.file}, board);
 
         Position positions[2] = {
@@ -175,13 +181,14 @@ namespace Board
             if (position.IsValidPosition())
             {
                 Piece piece = Board::GetPieceAtPosition(position, board);
-                if (piece.color != capture_piece.color
+                if (piece.color != captured_piece.color
                     && piece.type != PIECETYPE_NIL)
                 {
                     moves.push_back({.curr = position,
                                      .target = enpassant_target,
                                      .type = MOVETYPE_ENPASSANT,
-                                     .piece = piece});
+                                     .piece = piece,
+                                     .captured_piece = captured_piece});
                     // cout << position.GetPositionCode() << " "
                     //      << piece.GetPieceCode() << " " << 1 << "\n";
                 }
@@ -191,7 +198,7 @@ namespace Board
         return moves;
     }
 
-    Moves GetAllMoves(const BoardState &state)
+    Moves GetAllMoves(const BoardState state)
     {
         auto moves = GetRegularMoves(state.turn, state.board);
 
@@ -207,7 +214,7 @@ namespace Board
         return moves;
     }
 
-    Moves GetLegalMoves(const BoardState &state)
+    Moves GetLegalMoves(const BoardState state)
     {
         auto moves = GetRegularMoves(state.turn, state.board);
 
@@ -226,7 +233,7 @@ namespace Board
         return validMoves;
     }
 
-    Moves FilterMovesThatLandKingInCheck(Moves &moves, const BoardState &state)
+    Moves FilterMovesThatLandKingInCheck(Moves &moves, const BoardState state)
     {
         Moves validMoves;
         for (auto move : moves)
@@ -273,6 +280,9 @@ namespace Board
         bool kingWillBeInCheckPassingOver;
         Piece king_piece =
             GetPieceAtPosition({.rank = rank, .file = king_file}, board);
+        Piece empty_captured_piece = {.type = PIECETYPE_NIL,
+                                      .color = COLOR_NIL};
+
         if (king_side_allowed)
         {
             king_target_file = 6;
@@ -290,7 +300,8 @@ namespace Board
                         .curr = {.rank = rank, .file = king_file       },
                         .target = {.rank = rank, .file = king_target_file},
                         .type = MOVETYPE_CASTLING,
-                        .piece = king_piece
+                        .piece = king_piece,
+                        .captured_piece = empty_captured_piece,
                     });
                 }
             }
@@ -313,7 +324,8 @@ namespace Board
                         .curr = {.rank = rank, .file = king_file       },
                         .target = {.rank = rank, .file = king_target_file},
                         .type = MOVETYPE_CASTLING,
-                        .piece = king_piece
+                        .piece = king_piece,
+                        .captured_piece = empty_captured_piece,
                     });
                 }
             }
@@ -322,7 +334,7 @@ namespace Board
         return moves;
     }
 
-    Move GetBestMove(const BoardState &state)
+    Move GetBestMove(const BoardState state)
     {
         auto moves = Board::GetAllMoves(state);
         moves = Board::FilterMovesThatLandKingInCheck(moves, state);
@@ -330,15 +342,23 @@ namespace Board
         {
             return {
                 .curr = {.rank = -1,            .file = -1        },
-                .piece = {.type = PIECETYPE_NIL, .color = COLOR_NIL}
+                .piece = {.type = PIECETYPE_NIL, .color = COLOR_NIL},
+                .captured_piece = {.type = PIECETYPE_NIL, .color = COLOR_NIL},
             };
         }
         vector<int> evals;
+        int total_moves = 0;
+        int depth = 6;
         for (const auto move : moves)
         {
-            int eval = EvaluateMoveWithMinMax(move, state);
-            evals.push_back(eval);
+            MinMaxEval eval = EvaluateMoveWithMinMax(move, state, depth);
+            evals.push_back(eval.value);
+            total_moves += eval.num_moves_evaluated;
+            // cout << state.turn << " " << eval.value << " "
+            //      << move.curr.GetPositionCode() << " " << move.type << " "
+            //      << move.target.GetPositionCode() << "\n";
         }
+        cout << "boom " << total_moves << endl;
         sort_by_order(moves, evals, false);
 
         const Move best = moves[0];

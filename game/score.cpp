@@ -4,13 +4,13 @@ namespace Board
 {
 
     const map<PieceType, int> PieceValues = {
-        {PIECETYPE_NIL,    0},
-        {PIECETYPE_PAWN,   1},
-        {PIECETYPE_KNIGHT, 3},
-        {PIECETYPE_BISHOP, 3},
-        {PIECETYPE_ROOK,   5},
-        {PIECETYPE_QUEEN,  9},
-        {PIECETYPE_KING,   0},
+        {PIECETYPE_NIL,    0  },
+        {PIECETYPE_PAWN,   100},
+        {PIECETYPE_KNIGHT, 300},
+        {PIECETYPE_BISHOP, 300},
+        {PIECETYPE_ROOK,   500},
+        {PIECETYPE_QUEEN,  900},
+        {PIECETYPE_KING,   0  },
     };
 
     int getSimpleValueForBoard(const BoardArray &board)
@@ -28,17 +28,32 @@ namespace Board
         return score;
     }
 
-    int EvaluateMoveWithScoreLookup(Move move, const BoardState &state)
+    int EvaluateMoveWithSimpleScoreLookup(Move move, const BoardState state)
     {
         const auto new_state = Board::NewBoardAfterMove(move, state);
         return Board::getSimpleValueForBoard(new_state.board);
     }
 
-    int EvaluateMoveWithMinMax(Move move, const BoardState &state)
+    int EvaluateMoveWithSomeHeuristics(Move move, const BoardState state)
     {
-        const int alpha = state.turn == COLOR_WHITE ? pow(2, 15) : -pow(2, 15);
+        int score = 0;
+        const int sign = move.piece.color == COLOR_WHITE ? -1 : 1;
+        if (move.captured_piece.type != PIECETYPE_NIL
+            && move.type == MOVETYPE_CAPTURE)
+        {
+            score += sign * 10 * ((PieceValues.at(move.captured_piece.type)));
+        }
         const auto new_state = Board::NewBoardAfterMove(move, state);
-        int eval = AI::minmax(new_state, 4, alpha, -alpha);
+        score += Board::getSimpleValueForBoard(new_state.board);
+        return score;
+    }
+
+    MinMaxEval
+    EvaluateMoveWithMinMax(Move move, const BoardState state, int depth)
+    {
+        const auto new_state = Board::NewBoardAfterMove(move, state);
+        const int alpha = new_state.turn == COLOR_WHITE ? INT_MAX : -INT_MAX;
+        MinMaxEval eval = AI::minmax(new_state, depth, alpha, -alpha);
         return eval;
     }
 } // namespace Board

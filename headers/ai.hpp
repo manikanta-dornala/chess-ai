@@ -9,5 +9,7 @@ using namespace std;
 
 namespace AI
 {
-    int minmax(const BoardState &state, const int depth, int alpha, int beta);
-}
+
+    MinMaxEval
+    minmax(const BoardState state, const int depth, int alpha, int beta);
+} // namespace AI
