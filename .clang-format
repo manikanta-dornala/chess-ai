@@ -5,13 +5,13 @@ UseTab: Never
 ColumnLimit: 80
 BreakBeforeBraces: Custom
 BraceWrapping:
-    AfterStruct: true
-    AfterClass: true
-    AfterFunction: true
-    AfterEnum: true
-    AfterNamespace: true
-    AfterControlStatement: true
-    AfterAnonymousNamespace: true
+  AfterStruct: true
+  AfterClass: true
+  AfterFunction: true
+  AfterEnum: true
+  AfterNamespace: true
+  AfterControlStatement: true
+  AfterAnonymousNamespace: true
 AllowShortFunctionsOnASingleLine: None
 SpacesInContainerLiterals: true
 BreakConstructorInitializers: BeforeComma
