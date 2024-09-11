@@ -38,7 +38,7 @@ namespace Board
     {
         const int alpha = state.turn == COLOR_WHITE ? pow(2, 15) : -pow(2, 15);
         const auto new_state = Board::NewBoardAfterMove(move, state);
-        int eval = AI::minmax(new_state, 3, alpha, -alpha);
+        int eval = AI::minmax(new_state, 4, alpha, -alpha);
         return eval;
     }
 } // namespace Board

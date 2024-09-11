@@ -4,7 +4,7 @@ WASM = em++
 CXXFLAGS = -Wall -std=c++17
 DEBUG_FLAGS = -g -fsanitize=address  # Debug-specific flags
 PROD_FLAGS = -O2                    # Production-specific flags
-WASM_FLAGS = -O3 -s WASM=1 -s ALLOW_MEMORY_GROWTH=1  -s EXTRA_EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' --std=c++17 --bind  # WASM-specific flags 
+WASM_FLAGS = -O3 -s WASM=1 -s ALLOW_MEMORY_GROWTH=1  -s EXPORTED_RUNTIME_METHODS='["ccall", "cwrap"]' --std=c++17 --bind 
 
 # Find all .cpp files recursively in the current directory and subdirectories
 SOURCES = $(shell find . -name "*.cpp")
@@ -25,7 +25,7 @@ WASM_OBJECTS = $(patsubst %.cpp, $(BUILD_DIR)/wasm/%.o, $(SOURCES))
 DEBUG_TARGET = ChessAI_debug
 PROD_TARGET = ChessAI
 WASM_TARGET = ChessAI.html 
-WASM_TARGET_REACT = ../src/assets/wasm/ai.html
+WASM_TARGET_REACT = ../public/ai.js
 
 # Default rule to build the production target
 all: prod
@@ -81,4 +81,4 @@ $(BUILD_DIR)/wasm/%.o: %.cpp
 # Clean up build files
 clean:
 	@echo "Cleaning up..."
-	rm -rf $(BUILD_DIR) $(PROD_TARGET) $(DEBUG_TARGET) $(WASM_TARGET)
+	rm -rf $(BUILD_DIR) $(PROD_TARGET) $(DEBUG_TARGET) $(WASM_TARGET) $(WASM_TARGET_REACT)
