@@ -2,17 +2,16 @@
 #include "enums.hpp"
 using namespace std;
 
-struct CastlingRights
-{
+class CastlingRights {
+public:
     bool white_king_side = false;
     bool white_queen_side = false;
     bool black_king_side = false;
     bool black_queen_side = false;
 };
 
-class Position
-{
-  public:
+class Position {
+public:
     int rank = RANK_nil;
     int file = FILE_nil;
 
@@ -20,11 +19,10 @@ class Position
     string GetPositionCode() const;
 };
 
-vector<Position> &GetPieceMoveDestinations(PieceType &piece_type);
+vector<Position>& GetPieceMoveDestinations(PieceType& piece_type);
 
-class Piece
-{
-  public:
+class Piece {
+public:
     PieceType type = PIECETYPE_NIL;
     Color color = COLOR_NIL;
     char GetPieceCode() const;
@@ -32,9 +30,8 @@ class Piece
 
 using BoardArray = std::array<std::array<Piece, 8>, 8>;
 
-struct Move
-{
-    // public:
+class Move {
+public:
     Position curr;
     Position target;
     Piece piece;
@@ -46,18 +43,16 @@ struct Move
 
 using Moves = vector<Move>;
 
-struct BoardState
-{
+class BoardState {
+public:
     BoardArray board;
     CastlingRights castling_rights;
     Position enpassant_target;
     Color turn = COLOR_NIL;
 };
 
-// expr Piece DefaultPiece = { .type = PIECETYPE_NIL, .color = COLOR_NIL };
-
-struct MinMaxEval
-{
+class MinMaxEval {
+public:
     int value = 0;
     int num_moves_evaluated = 0;
 };

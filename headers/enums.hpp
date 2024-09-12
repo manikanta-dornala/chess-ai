@@ -1,14 +1,10 @@
 #pragma once
 
-enum Color
-{
-    COLOR_NIL = 0,
+enum Color { COLOR_NIL = 0,
     COLOR_WHITE,
-    COLOR_BLACK
-};
+    COLOR_BLACK };
 
-enum MoveType
-{
+enum MoveType {
     MOVETYPE_NIL = 0,
     MOVETYPE_MOVE,
     MOVETYPE_DOUBLE_MOVE,
@@ -18,8 +14,7 @@ enum MoveType
     MOVETYPE_CASTLING
 };
 
-enum PieceType
-{
+enum PieceType {
     PIECETYPE_NIL = 0,
     PIECETYPE_PAWN,
     PIECETYPE_KNIGHT,

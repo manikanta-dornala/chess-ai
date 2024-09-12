@@ -7,9 +7,8 @@
 #include "utils.hpp"
 using namespace std;
 
-namespace AI
-{
+namespace AI {
 
-    MinMaxEval
-    minmax(const BoardState state, const int depth, int alpha, int beta);
-} // namespace AI
+MinMaxEval minmax(const BoardState state, const int depth, int alpha, int beta);
+
+}

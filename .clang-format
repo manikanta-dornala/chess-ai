@@ -1,26 +1,26 @@
 # .clang-format
-BasedOnStyle: LLVM
+BasedOnStyle: WebKit
 IndentWidth: 4
 UseTab: Never
-ColumnLimit: 80
-BreakBeforeBraces: Custom
-BraceWrapping:
-  AfterStruct: true
-  AfterClass: true
-  AfterFunction: true
-  AfterEnum: true
-  AfterNamespace: true
-  AfterControlStatement: true
-  AfterAnonymousNamespace: true
-AllowShortFunctionsOnASingleLine: None
-SpacesInContainerLiterals: true
-BreakConstructorInitializers: BeforeComma
-AlignTrailingComments: true
-AlignArrayOfStructures: Left
-BinPackParameters: false
-BinPackArguments: false
-AlwaysBreakBeforeMultilineStrings: true
-IndentCaseLabels: true
-NamespaceIndentation: All
-BreakBeforeBinaryOperators: NonAssignment
-BreakAfterBraces: Custom
+# ColumnLimit: 80
+# BreakBeforeBraces: Custom
+# BraceWrapping:
+#   AfterStruct: true
+#   AfterClass: true
+#   AfterFunction: true
+#   AfterEnum: true
+#   AfterNamespace: true
+#   AfterControlStatement: true
+#   AfterAnonymousNamespace: true
+# AllowShortFunctionsOnASingleLine: None
+# SpacesInContainerLiterals: true
+# BreakConstructorInitializers: BeforeComma
+# AlignTrailingComments: true
+# AlignArrayOfStructures: Left
+# BinPackParameters: false
+# BinPackArguments: false
+# AlwaysBreakBeforeMultilineStrings: true
+# IndentCaseLabels: true
+# NamespaceIndentation: All
+# BreakBeforeBinaryOperators: NonAssignment
+# BreakAfterBraces: Custom

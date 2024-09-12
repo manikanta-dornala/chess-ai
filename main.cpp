@@ -15,26 +15,23 @@ int main()
     // const string fen =
     //     "1Nbqkb1r/2pppppp/7n/2P5/8/1n2P3/PP1P1PPP/R1BQKBNR w KQk - 1 9";
     // const auto fen = "5Kbk/6pp/6P1/8/8/8/8/7R w - -"; // Mate in two
-    const auto fen =
-        "rnbqkbnr/pppppppp/8/8/2P5/8/PP1PPPPP/RNBQKBNR b KQkq c3 0 2"; // opening
+    const auto fen = "rnbqkbnr/pppppppp/8/8/2P5/8/PP1PPPPP/RNBQKBNR b KQkq c3 0 2"; // opening
     BoardState state = FEN::GetBoardState(fen);
-    Board::printBoard(state.board);
+    Board::PrintBoard(state.board);
     // Board::GetLegalMoves(turn, castling_rights, enpassant_target, board);
     cout << "------\n";
 
-    for (int i = 0; i < 10; i++)
-    {
+    for (int i = 0; i < 10; i++) {
         auto move = Board::GetBestMove(state);
 
         cout << state.turn << " " << move.curr.GetPositionCode() << " "
              << move.type << " " << move.target.GetPositionCode() << "\n";
-        if (move.curr.rank == -1)
-        {
+        if (move.curr.rank == -1) {
             cout << "checkmate" << endl;
             return 0;
         }
         state = Board::NewBoardAfterMove(move, state);
-        Board::printBoard(state.board);
+        Board::PrintBoard(state.board);
     }
 
     return 0;
