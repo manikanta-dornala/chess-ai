@@ -13,13 +13,16 @@ SOURCES = $(shell find . -name "*.cpp")
 EXCLUDED_CPP = ./chessailib.cpp
 SOURCES_EXCLUDE = $(filter-out $(EXCLUDED_CPP), $(SOURCES))
 
+WASM_EXCLUDE_CPP = ./main.cpp
+WASM_SOURCES_EXCLUDE = $(filter-out $(WASM_EXCLUDE_CPP), $(SOURCES))
+
 # Directory to store object files
 BUILD_DIR = build
 
 # Generate object files for each source file in the build directory
 DEBUG_OBJECTS = $(patsubst %.cpp, $(BUILD_DIR)/debug/%.o, $(SOURCES_EXCLUDE))
 PROD_OBJECTS = $(patsubst %.cpp, $(BUILD_DIR)/prod/%.o, $(SOURCES_EXCLUDE))
-WASM_OBJECTS = $(patsubst %.cpp, $(BUILD_DIR)/wasm/%.o, $(SOURCES))
+WASM_OBJECTS = $(patsubst %.cpp, $(BUILD_DIR)/wasm/%.o, $(WASM_SOURCES_EXCLUDE))
 
 # Target executable names
 DEBUG_TARGET = ChessAI_debug

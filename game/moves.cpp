@@ -14,7 +14,6 @@ namespace Board
             return moves;
 
         int destination = piece.color == COLOR_WHITE ? 1 : -1;
-        Piece captured_piece = {.type = PIECETYPE_NIL, .color = COLOR_NIL};
 
         // handle regular move on to a empty Piece
         Position forward_one = {
@@ -28,7 +27,6 @@ namespace Board
             moves.push_back({.target = forward_one,
                              .type = MOVETYPE_MOVE,
                              .piece = piece,
-                             .captured_piece = captured_piece,
                              .curr = position});
 
             // since it can make one move, handle double move if
@@ -44,11 +42,12 @@ namespace Board
                     && Board::GetPieceAtPosition(forward_two, board).type
                            == PIECETYPE_NIL)
                 {
-                    moves.push_back({.curr = position,
-                                     .target = forward_two,
-                                     .type = MOVETYPE_MOVE,
-                                     .piece = piece,
-                                     .captured_piece = captured_piece});
+                    moves.push_back({
+                        .curr = position,
+                        .target = forward_two,
+                        .type = MOVETYPE_MOVE,
+                        .piece = piece,
+                    });
                 }
             }
         }
@@ -75,6 +74,13 @@ namespace Board
             }
         }
 
+        return moves;
+    }
+
+    Moves GetPawnProomotionMoves(const Move move)
+    {
+        Moves moves;
+        moves.push_back(move);
         return moves;
     }
 
@@ -113,8 +119,7 @@ namespace Board
                         moves.push_back({.curr = position,
                                          .target = target_position,
                                          .type = MOVETYPE_MOVE,
-                                         .piece = piece,
-                                         .captured_piece = piece_at_target});
+                                         .piece = piece});
                     } else
                     {
                         if (piece_at_target.color != piece.color)
@@ -280,8 +285,6 @@ namespace Board
         bool kingWillBeInCheckPassingOver;
         Piece king_piece =
             GetPieceAtPosition({.rank = rank, .file = king_file}, board);
-        Piece empty_captured_piece = {.type = PIECETYPE_NIL,
-                                      .color = COLOR_NIL};
 
         if (king_side_allowed)
         {
@@ -301,7 +304,6 @@ namespace Board
                         .target = {.rank = rank, .file = king_target_file},
                         .type = MOVETYPE_CASTLING,
                         .piece = king_piece,
-                        .captured_piece = empty_captured_piece,
                     });
                 }
             }
@@ -325,7 +327,6 @@ namespace Board
                         .target = {.rank = rank, .file = king_target_file},
                         .type = MOVETYPE_CASTLING,
                         .piece = king_piece,
-                        .captured_piece = empty_captured_piece,
                     });
                 }
             }
@@ -340,15 +341,11 @@ namespace Board
         moves = Board::FilterMovesThatLandKingInCheck(moves, state);
         if (moves.size() == 0)
         {
-            return {
-                .curr = {.rank = -1,            .file = -1        },
-                .piece = {.type = PIECETYPE_NIL, .color = COLOR_NIL},
-                .captured_piece = {.type = PIECETYPE_NIL, .color = COLOR_NIL},
-            };
+            return Move();
         }
         vector<int> evals;
         int total_moves = 0;
-        int depth = 6;
+        int depth = 4;
         for (const auto move : moves)
         {
             MinMaxEval eval = EvaluateMoveWithMinMax(move, state, depth);

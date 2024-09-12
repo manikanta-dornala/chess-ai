@@ -7,13 +7,6 @@ namespace Board
 
     void InitializeBoard(BoardArray &board)
     {
-        for (int row = 0; row < 8; ++row)
-        {
-            for (int col = 0; col < 8; ++col)
-            {
-                board[row][col] = DefaultPiece;
-            }
-        }
 
         for (int col = 0; col < 8; ++col)
         {
@@ -153,14 +146,13 @@ namespace Board
     {
         BoardArray boardCopy;
         Board::copyBoard(state.board, boardCopy);
-        const Piece nil_piece = {PIECETYPE_NIL, COLOR_NIL};
         auto castling_rights = state.castling_rights;
         auto enpassant_target = state.enpassant_target;
         switch (move.type)
         {
             case MOVETYPE_MOVE:
                 boardCopy[move.target.rank][move.target.file] = move.piece;
-                boardCopy[move.curr.rank][move.curr.file] = nil_piece;
+                boardCopy[move.curr.rank][move.curr.file] = Piece();
                 if (move.piece.type == PIECETYPE_KING)
                 {
                     if (move.piece.color == COLOR_WHITE)
@@ -174,16 +166,16 @@ namespace Board
                         castling_rights.black_queen_side = false;
                     }
                 }
-                enpassant_target = {-1, -1};
+                enpassant_target = Position();
                 break;
             case MOVETYPE_DOUBLE_MOVE:
                 boardCopy[move.target.rank][move.target.file] = move.piece;
-                boardCopy[move.curr.rank][move.curr.file] = nil_piece;
+                boardCopy[move.curr.rank][move.curr.file] = Piece();
                 enpassant_target = move.target;
                 break;
             case MOVETYPE_CAPTURE:
                 boardCopy[move.target.rank][move.target.file] = move.piece;
-                boardCopy[move.curr.rank][move.curr.file] = nil_piece;
+                boardCopy[move.curr.rank][move.curr.file] = Piece();
                 if (move.piece.type == PIECETYPE_KING)
                 {
                     if (move.piece.color == COLOR_WHITE)
@@ -197,22 +189,22 @@ namespace Board
                         castling_rights.black_queen_side = false;
                     }
                 }
-                enpassant_target = {-1, -1};
+                enpassant_target = Position();
                 break;
             case MOVETYPE_ENPASSANT: {
                 boardCopy[move.target.rank][move.target.file] = move.piece;
-                boardCopy[move.curr.rank][move.curr.file] = nil_piece;
+                boardCopy[move.curr.rank][move.curr.file] = Piece();
                 Position enpassant_capture = {
                     .rank = move.piece.color == COLOR_WHITE ? RANK_5 : RANK_4,
                     .file = move.target.file};
                 boardCopy[enpassant_capture.rank][enpassant_capture.file] =
-                    nil_piece;
-                enpassant_target = {-1, -1};
+                    Piece();
+                enpassant_target = Position();
                 break;
             }
             case MOVETYPE_CASTLING: {
                 boardCopy[move.target.rank][move.target.file] = move.piece;
-                boardCopy[move.curr.rank][move.curr.file] = nil_piece;
+                boardCopy[move.curr.rank][move.curr.file] = Piece();
                 Position rook_curr_position = {
                     .rank = move.target.rank,
                     .file = move.target.file == FILE_c ? FILE_a : FILE_h};
@@ -222,7 +214,7 @@ namespace Board
                 boardCopy[rook_final_position.rank][rook_final_position.file] =
                     {.type = PIECETYPE_ROOK, .color = move.piece.color};
                 boardCopy[rook_curr_position.rank][rook_curr_position.file] =
-                    nil_piece;
+                    Piece();
                 if (move.piece.color == COLOR_WHITE)
                 {
                     castling_rights.white_king_side = false;
@@ -233,7 +225,7 @@ namespace Board
                     castling_rights.black_king_side = false;
                     castling_rights.black_queen_side = false;
                 }
-                enpassant_target = {-1, -1};
+                enpassant_target = Position();
                 break;
             }
             default:

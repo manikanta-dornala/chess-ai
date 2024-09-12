@@ -70,6 +70,7 @@ namespace AI
             }
         }
         last_eval.num_moves_evaluated = total_moves;
+        // last_eval.value = last_eval.value / depth;
         // if (depth == 1)
         //     cout << depth << " " << last_eval.num_moves_evaluated << endl;
         return last_eval;

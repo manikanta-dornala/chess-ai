@@ -4,17 +4,17 @@ using namespace std;
 
 struct CastlingRights
 {
-    bool white_king_side;
-    bool white_queen_side;
-    bool black_king_side;
-    bool black_queen_side;
+    bool white_king_side = false;
+    bool white_queen_side = false;
+    bool black_king_side = false;
+    bool black_queen_side = false;
 };
 
-struct Position
+class Position
 {
-
-    int rank;
-    int file;
+  public:
+    int rank = RANK_nil;
+    int file = FILE_nil;
 
     bool IsValidPosition() const;
     string GetPositionCode() const;
@@ -22,10 +22,11 @@ struct Position
 
 vector<Position> &GetPieceMoveDestinations(PieceType &piece_type);
 
-struct Piece
+class Piece
 {
-    PieceType type;
-    Color color;
+  public:
+    PieceType type = PIECETYPE_NIL;
+    Color color = COLOR_NIL;
     char GetPieceCode() const;
 };
 
@@ -38,7 +39,8 @@ struct Move
     Position target;
     Piece piece;
     Piece captured_piece;
-    MoveType type;
+    Piece promoted_piece;
+    MoveType type = MOVETYPE_NIL;
     string GetChars();
 };
 
@@ -49,13 +51,13 @@ struct BoardState
     BoardArray board;
     CastlingRights castling_rights;
     Position enpassant_target;
-    Color turn;
+    Color turn = COLOR_NIL;
 };
 
 // expr Piece DefaultPiece = { .type = PIECETYPE_NIL, .color = COLOR_NIL };
 
 struct MinMaxEval
 {
-    int value;
-    int num_moves_evaluated;
+    int value = 0;
+    int num_moves_evaluated = 0;
 };

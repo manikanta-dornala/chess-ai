@@ -29,21 +29,5 @@ namespace Board
     int EvaluateMoveWithSomeHeuristics(Move move, const BoardState state);
     MinMaxEval
     EvaluateMoveWithMinMax(Move move, const BoardState state, int depth);
-    constexpr int RANK_1 = 0;
-    constexpr int RANK_2 = 1;
-    constexpr int RANK_3 = 2;
-    constexpr int RANK_4 = 3;
-    constexpr int RANK_5 = 4;
-    constexpr int RANK_6 = 5;
-    constexpr int RANK_7 = 6;
-    constexpr int RANK_8 = 7;
 
-    constexpr int FILE_a = 0;
-    constexpr int FILE_b = 1;
-    constexpr int FILE_c = 2;
-    constexpr int FILE_d = 3;
-    constexpr int FILE_e = 4;
-    constexpr int FILE_f = 5;
-    constexpr int FILE_g = 6;
-    constexpr int FILE_h = 7;
 } // namespace Board
