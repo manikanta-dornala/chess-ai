@@ -8,8 +8,10 @@ MinMaxEval minmax(const BoardState state,
     int beta)
 {
     if (depth == 0) {
-        return { .value = Board::getSimpleValueForBoard(state.board),
-            .num_moves_evaluated = 1 };
+        return {
+            .value = Board::getSimpleValueForBoard(state.board),
+            .num_moves_evaluated = 1
+        };
     }
 
     Moves moves = Board::GetRegularMoves(state.turn, state.board);
@@ -39,6 +41,7 @@ MinMaxEval minmax(const BoardState state,
         const BoardState new_state = Board::NewBoardAfterMove(move, state);
         auto eval = minmax(new_state, depth - 1, alpha, beta);
         total_moves += eval.num_moves_evaluated;
+
         if (state.turn == COLOR_WHITE) {
             max_eval_value = max(eval.value, max_eval_value);
             if (max_eval_value == eval.value) {
@@ -50,6 +53,7 @@ MinMaxEval minmax(const BoardState state,
                 break;
             }
         }
+
         if (state.turn == COLOR_BLACK) {
             min_eval_value = min(eval.value, min_eval_value);
             if (min_eval_value == eval.value)
@@ -61,9 +65,6 @@ MinMaxEval minmax(const BoardState state,
         }
     }
     last_eval.num_moves_evaluated = total_moves;
-    // last_eval.value = last_eval.value / depth;
-    // if (depth == 1)
-    //     cout << depth << " " << last_eval.num_moves_evaluated << endl;
     return last_eval;
 }
 } // namespace AI

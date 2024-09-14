@@ -6,7 +6,7 @@ map<char, PieceType> PieceTypeMap = {
     { 'r', PIECETYPE_ROOK }, { 'q', PIECETYPE_QUEEN }, { 'k', PIECETYPE_KING }
 };
 
-void SetBoard(const string& fen, BoardArray& board)
+void SetBoard(const string& fen, BoardPieces& board)
 {
     // Clear the board
     for (int i = 0; i < 8; ++i) {
@@ -103,7 +103,7 @@ Position GetEnPassantTarget(const string& fen)
 
 BoardState GetBoardState(const string& fen)
 {
-    BoardArray board;
+    BoardPieces board;
     SetBoard(fen, board);
     CastlingRights castling_rights = GetCastlingRights(fen);
     Color turn = GetCurrentTurn(fen);

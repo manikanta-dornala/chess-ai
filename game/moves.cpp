@@ -4,7 +4,7 @@ using namespace std;
 
 namespace Board {
 
-Moves GetPawnMovesForPieceAt(const Position position, const BoardArray& board)
+Moves GetPawnMovesForPieceAt(const Position position, const BoardPieces& board)
 {
     Moves moves;
     auto piece = Board::GetPieceAtPosition(position, board);
@@ -19,10 +19,15 @@ Moves GetPawnMovesForPieceAt(const Position position, const BoardArray& board)
         .file = position.file,
     };
     if (forward_one.IsValidPosition() && Board::GetPieceAtPosition(forward_one, board).type == PIECETYPE_NIL) {
-        moves.push_back({ .target = forward_one,
+        const Move move = {
+            .target = forward_one,
             .type = MOVETYPE_MOVE,
             .piece = piece,
-            .curr = position });
+            .curr = position
+        };
+        for (auto new_move : ApplyPawnProomotionMoves(move)) {
+            moves.push_back(new_move);
+        }
 
         // since it can make one move, handle double move if
         // at initial rank
@@ -53,25 +58,47 @@ Moves GetPawnMovesForPieceAt(const Position position, const BoardArray& board)
             continue;
         Piece piece_at_target = Board::GetPieceAtPosition(capture_position, board);
         if (piece_at_target.type != PIECETYPE_NIL && piece.color != piece_at_target.color) {
-            moves.push_back({ .curr = position,
+            const Move move = {
+                .curr = position,
                 .target = capture_position,
                 .type = MOVETYPE_CAPTURE,
                 .piece = piece,
-                .captured_piece = piece_at_target });
+                .captured_piece = piece_at_target
+            };
+            for (auto new_move : ApplyPawnProomotionMoves(move)) {
+                moves.push_back(new_move);
+            }
         }
     }
 
     return moves;
 }
 
-Moves GetPawnProomotionMoves(const Move move)
+Moves ApplyPawnProomotionMoves(const Move move)
 {
     Moves moves;
-    moves.push_back(move);
+    if (move.piece.type == PIECETYPE_PAWN && ((move.target.rank == RANK_8 && move.piece.color == COLOR_WHITE) || (move.target.rank == RANK_1 && move.piece.color == COLOR_BLACK))) {
+        Piece promotions[4] = {
+            { .type = PIECETYPE_QUEEN, .color = move.piece.color },
+            { .type = PIECETYPE_ROOK, .color = move.piece.color },
+            { .type = PIECETYPE_BISHOP, .color = move.piece.color },
+            { .type = PIECETYPE_KNIGHT, .color = move.piece.color }
+        };
+
+        for (Piece piece : promotions) {
+            Move new_move = move;
+            new_move.type = MOVETYPE_PROMOTE;
+            new_move.promoted_piece = piece;
+            moves.push_back(new_move);
+        }
+    }
+    if (moves.size() == 0) {
+        moves.push_back(move);
+    }
     return moves;
 }
 
-Moves GetMovesForPieceAt(const Position position, const BoardArray& board)
+Moves GetMovesForPieceAt(const Position position, const BoardPieces& board)
 {
     auto moves = Moves();
     Moves pawn_moves = GetPawnMovesForPieceAt(position, board);
@@ -117,7 +144,7 @@ Moves GetMovesForPieceAt(const Position position, const BoardArray& board)
     return moves;
 }
 
-Moves GetRegularMoves(const Color turn, const BoardArray& board)
+Moves GetRegularMoves(const Color turn, const BoardPieces& board)
 {
     Moves moves;
     for (int rank = 7; rank >= 0; --rank) {
@@ -135,7 +162,7 @@ Moves GetRegularMoves(const Color turn, const BoardArray& board)
 }
 
 Moves GetEnpassantCaptures(const Position enpassant_target,
-    const BoardArray& board)
+    const BoardPieces& board)
 {
     auto moves = Moves();
     int capture_rank;
@@ -223,7 +250,7 @@ Moves FilterMovesThatLandKingInCheck(Moves& moves, const BoardState state)
 
 Moves GetCastlingMoves(const Color turn,
     const CastlingRights castling_rights,
-    const BoardArray& board)
+    const BoardPieces& board)
 {
     Moves moves;
     int king_file = 4;

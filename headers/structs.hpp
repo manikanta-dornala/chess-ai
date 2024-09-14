@@ -28,7 +28,8 @@ public:
     char GetPieceCode() const;
 };
 
-using BoardArray = std::array<std::array<Piece, 8>, 8>;
+using BoardHeatMap = std::array<std::array<int, 8>, 8>;
+using BoardPieces = std::array<std::array<Piece, 8>, 8>;
 
 class Move {
 public:
@@ -45,7 +46,7 @@ using Moves = vector<Move>;
 
 class BoardState {
 public:
-    BoardArray board;
+    BoardPieces board;
     CastlingRights castling_rights;
     Position enpassant_target;
     Color turn = COLOR_NIL;

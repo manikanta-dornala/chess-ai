@@ -12,7 +12,7 @@ const map<PieceType, int> PieceValues = {
     { PIECETYPE_KING, 0 },
 };
 
-int getSimpleValueForBoard(const BoardArray& board)
+int getSimpleValueForBoard(const BoardPieces& board)
 {
     int score = 0;
     for (int i = 0; i < 8; i++) {

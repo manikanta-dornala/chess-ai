@@ -4,7 +4,7 @@ using namespace std;
 namespace Board {
 const Piece DefaultPiece = { .type = PIECETYPE_NIL, .color = COLOR_NIL };
 
-void InitializeBoard(BoardArray& board)
+void InitializeBoard(BoardPieces& board)
 {
     for (int col = 0; col < 8; ++col) {
         board[RANK_2][col] = { .type = PIECETYPE_PAWN, .color = COLOR_WHITE };
@@ -30,7 +30,7 @@ void InitializeBoard(BoardArray& board)
     board[RANK_8][FILE_h] = { PIECETYPE_ROOK, COLOR_BLACK };
 }
 
-void copyBoard(const BoardArray& original, BoardArray& newBoard)
+void copyBoard(const BoardPieces& original, BoardPieces& newBoard)
 {
     for (int rank = 0; rank < 8; rank++) {
         for (int file = 0; file < 8; file++) {
@@ -40,7 +40,7 @@ void copyBoard(const BoardArray& original, BoardArray& newBoard)
     }
 }
 
-int numPiecesOnBoard(const BoardArray& board)
+int numPiecesOnBoard(const BoardPieces& board)
 {
     int numPieces = 0;
     for (int rank = 0; rank < 8; rank++) {
@@ -54,7 +54,7 @@ int numPiecesOnBoard(const BoardArray& board)
 }
 
 Piece GetPieceAtPosition(const Position position,
-    const BoardArray& board)
+    const BoardPieces& board)
 {
     if (position.IsValidPosition()) {
         return board[position.rank][position.file];
@@ -62,7 +62,7 @@ Piece GetPieceAtPosition(const Position position,
     return DefaultPiece;
 }
 
-void PrintBoard(const BoardArray& board)
+void PrintBoard(const BoardPieces& board)
 {
     for (int rank = 7; rank >= 0; --rank) {
         for (int file = 0; file < 8; ++file) {
@@ -74,7 +74,7 @@ void PrintBoard(const BoardArray& board)
     }
 }
 
-Position GetKingPosition(const Color turn, const BoardArray& board)
+Position GetKingPosition(const Color turn, const BoardPieces& board)
 {
     for (int rank = 7; rank >= 0; --rank) {
         for (int file = 0; file < 8; ++file) {
@@ -88,7 +88,7 @@ Position GetKingPosition(const Color turn, const BoardArray& board)
     return { -1, -1 };
 }
 
-bool IsKingInCheck(const Color turn, const BoardArray& board)
+bool IsKingInCheck(const Color turn, const BoardPieces& board)
 {
     auto king_position = GetKingPosition(turn, board);
     return IsKingInCheckAt(turn, king_position, board);
@@ -96,7 +96,7 @@ bool IsKingInCheck(const Color turn, const BoardArray& board)
 
 bool IsKingInCheckAt(const Color turn,
     const Position king_position,
-    const BoardArray& board)
+    const BoardPieces& board)
 {
     for (int rank = 7; rank >= 0; --rank) {
         for (int file = 0; file < 8; ++file) {
@@ -115,65 +115,44 @@ bool IsKingInCheckAt(const Color turn,
     return false;
 }
 
-bool IsPositionEmpty(const Position position, const BoardArray& board)
+bool IsPositionEmpty(const Position position, const BoardPieces& board)
 {
     return GetPieceAtPosition(position, board).type == PIECETYPE_NIL;
 }
 
 BoardState NewBoardAfterMove(const Move move, const BoardState state)
 {
-    BoardArray boardCopy;
+    BoardPieces boardCopy;
     Board::copyBoard(state.board, boardCopy);
+
     auto castling_rights = state.castling_rights;
-    auto enpassant_target = state.enpassant_target;
+    if (move.piece.type == PIECETYPE_KING) {
+        if (move.piece.color == COLOR_WHITE) {
+            castling_rights.white_king_side = false;
+            castling_rights.white_queen_side = false;
+        }
+        if (move.piece.color == COLOR_BLACK) {
+            castling_rights.black_king_side = false;
+            castling_rights.black_queen_side = false;
+        }
+    }
+
+    auto enpassant_target = Position();
+
     switch (move.type) {
-    case MOVETYPE_MOVE: {
-        boardCopy[move.target.rank][move.target.file] = move.piece;
-        boardCopy[move.curr.rank][move.curr.file] = Piece();
-        if (move.piece.type == PIECETYPE_KING) {
-            if (move.piece.color == COLOR_WHITE) {
-                castling_rights.white_king_side = false;
-                castling_rights.white_queen_side = false;
-            }
-            if (move.piece.color == COLOR_BLACK) {
-                castling_rights.black_king_side = false;
-                castling_rights.black_queen_side = false;
-            }
-        }
-        enpassant_target = Position();
-        break;
-    }
-    case MOVETYPE_DOUBLE_MOVE: {
-        boardCopy[move.target.rank][move.target.file] = move.piece;
-        boardCopy[move.curr.rank][move.curr.file] = Piece();
+    case MOVETYPE_DOUBLE_MOVE:
         enpassant_target = move.target;
-        break;
-    }
-    case MOVETYPE_CAPTURE: {
-        boardCopy[move.target.rank][move.target.file] = move.piece;
-        boardCopy[move.curr.rank][move.curr.file] = Piece();
-        if (move.piece.type == PIECETYPE_KING) {
-            if (move.piece.color == COLOR_WHITE) {
-                castling_rights.white_king_side = false;
-                castling_rights.white_queen_side = false;
-            }
-            if (move.piece.color == COLOR_BLACK) {
-                castling_rights.black_king_side = false;
-                castling_rights.black_queen_side = false;
-            }
-        }
-        enpassant_target = Position();
-        break;
-    }
     case MOVETYPE_ENPASSANT: {
-        boardCopy[move.target.rank][move.target.file] = move.piece;
-        boardCopy[move.curr.rank][move.curr.file] = Piece();
         Position enpassant_capture = {
             .rank = move.piece.color == COLOR_WHITE ? RANK_5 : RANK_4,
             .file = move.target.file
         };
         boardCopy[enpassant_capture.rank][enpassant_capture.file] = Piece();
-        enpassant_target = Position();
+    }
+    case MOVETYPE_MOVE:
+    case MOVETYPE_CAPTURE: {
+        boardCopy[move.target.rank][move.target.file] = move.piece;
+        boardCopy[move.curr.rank][move.curr.file] = Piece();
         break;
     }
     case MOVETYPE_CASTLING: {
@@ -191,15 +170,12 @@ BoardState NewBoardAfterMove(const Move move, const BoardState state)
             .type = PIECETYPE_ROOK, .color = move.piece.color
         };
         boardCopy[rook_curr_position.rank][rook_curr_position.file] = Piece();
-        if (move.piece.color == COLOR_WHITE) {
-            castling_rights.white_king_side = false;
-            castling_rights.white_queen_side = false;
-        }
-        if (move.piece.color == COLOR_BLACK) {
-            castling_rights.black_king_side = false;
-            castling_rights.black_queen_side = false;
-        }
-        enpassant_target = Position();
+
+        break;
+    }
+    case MOVETYPE_PROMOTE: {
+        boardCopy[move.target.rank][move.target.file] = move.promoted_piece;
+        boardCopy[move.curr.rank][move.curr.file] = Piece();
         break;
     }
     default:
@@ -212,6 +188,12 @@ BoardState NewBoardAfterMove(const Move move, const BoardState state)
         .castling_rights = castling_rights,
         .enpassant_target = enpassant_target
     };
+}
+
+BoardHeatMap GetAttackMapForTurn(const Color turn, const BoardPieces& board)
+{
+    auto moves = GetRegularMoves(turn, board);
+    return BoardHeatMap();
 }
 
 } // namespace Board
